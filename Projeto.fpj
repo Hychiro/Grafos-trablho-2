@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Project>
+	<Libs Value=""/>
+	<Flags Value=""/>
+	<Target Value="Projeto.exe"/>
+	<CommandLine Value=""/>
+	<CompilerOptions Value="-Wall -s"/>
+	<DeleteObjectsBefore Value="Yes"/>
+	<DeleteObjectsAfter Value="Yes"/>
+	<DeleteMakefileAfter Value="Yes"/>
+	<DeleteResourcesAfter Value="Yes"/>
+	<EnableTheme Value="No"/>
+	<RequiresAdmin Value="No"/>
+	<CompilerType Value="CPP"/>
+	<AppType Value="CONSOLE"/>
+	<Files>
+		<File Name="mainTeste.cpp"/>
+		<File Name="Node.h"/>
+		<File Name="Edge.h"/>
+		<File Name="Edge.cpp"/>
+		<File Name="Graph.cpp"/>
+		<File Name="Graph.h"/>
+		<File Name="main.cpp"/>
+		<File Name="Node.cpp"/>
+	</Files>
+</Project>
