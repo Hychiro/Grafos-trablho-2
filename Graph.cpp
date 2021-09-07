@@ -276,15 +276,17 @@ Graph* Graph::guloso()
             std::list<int> arestasPorRotulo;//fila que aramzena os rotulos em ordem decrecente
             std::list<int>::iterator iterador;
             int vetorarestasPorRotulo[this->numeroRotulos];//vetor que faz relação posição=Rotulo e valor da posição=numero de arestas;
+            int vetorAux[this->numeroRotulos];
             for(int i=0;i<this->numeroRotulos;i++){//repetir para o numero de rotulos
                 vetorarestasPorRotulo[i]=contaRotulo(i);//para a posição i(que representa o Rótulo i) atribui o valor numero de arestas do Rotulo i
+                vetorAux[i]=0;
             }
 
             pair<int, int> maiorRotulo;//par que representa o maior rotulo atual <numero de arestas,Rotulo>
             maiorRotulo.first=0;//inicia o numero de arestas como 0
             maiorRotulo.second=-1;//inicia o Rotulo como -1
 
-            while(arestasPorRotulo.size()<numeroRotulos)//enquanto o tamanho da fila for menor que o numero de Rotulos
+            while(arestasPorRotulo.size()<this->numeroRotulos)//enquanto o tamanho da fila for menor que o numero de Rotulos
             {
                 for(int i=0;i<this->numeroRotulos;i++)//repetir para o numero de rotulos
                 {
@@ -294,14 +296,18 @@ Graph* Graph::guloso()
                         maiorRotulo.second=i;//maior Rotulo igual ao Rotulo analisado
                     }
                 }
+                vetorAux[maiorRotulo.second]=maiorRotulo.first;
                 arestasPorRotulo.push_back(maiorRotulo.second);//adiciona na parte de tras da fila o maior Rotulo da iteração
+
+               vetorarestasPorRotulo[maiorRotulo.second]=-1;//modifica no vetor o RRotulo que ja foi adicionado para que ele não se repita
+
                 maiorRotulo.first=0;//reinicia o numero de arestas como 0
                 maiorRotulo.second=-1;//reinicia o Rotulo como -1
             }
             //FIM FUNÇÃO ORDENA CANDIDATOS
 
 
-        Graph *q = new Graph(this->order, -1);//-1 pois começamos a contar os rotulos do 0, então -1 significa que não a rotulos
+        Graph *q = new Graph(this->order, 0);//-1 pois começamos a contar os rotulos do 0, então -1 significa que não a rotulos
         while (!q->verificaConexo(q))//Enquanto o grafo solução não for conexo repita
         {
             //Heuristica
@@ -328,15 +334,17 @@ Graph* Graph::gulosoRandomizado(float alfa,int instancia,int numIterações,Grap
             std::list<int> arestasPorRotulo;//fila que aramzena os rotulos em ordem decrecente
             std::list<int>::iterator iterador;
             int vetorarestasPorRotulo[this->numeroRotulos];//vetor que faz relação posição=Rotulo e valor da posição=numero de arestas;
+            int vetorAux[this->numeroRotulos];
             for(int i=0;i<this->numeroRotulos;i++){//repetir para o numero de rotulos
                 vetorarestasPorRotulo[i]=contaRotulo(i);//para a posição i(que representa o Rótulo i) atribui o valor numero de arestas do Rotulo i
+                vetorAux[i]=0;
             }
 
             pair<int, int> maiorRotulo;//par que representa o maior rotulo atual <numero de arestas,Rotulo>
             maiorRotulo.first=0;//inicia o numero de arestas como 0
             maiorRotulo.second=-1;//inicia o Rotulo como -1
 
-            while(arestasPorRotulo.size()<numeroRotulos)//enquanto o tamanho da fila for menor que o numero de Rotulos
+            while(arestasPorRotulo.size()<this->numeroRotulos)//enquanto o tamanho da fila for menor que o numero de Rotulos
             {
                 for(int i=0;i<this->numeroRotulos;i++)//repetir para o numero de rotulos
                 {
@@ -346,34 +354,33 @@ Graph* Graph::gulosoRandomizado(float alfa,int instancia,int numIterações,Grap
                         maiorRotulo.second=i;//maior Rotulo igual ao Rotulo analisado
                     }
                 }
+                vetorAux[maiorRotulo.second]=maiorRotulo.first;
                 arestasPorRotulo.push_back(maiorRotulo.second);//adiciona na parte de tras da fila o maior Rotulo da iteração
+
+               vetorarestasPorRotulo[maiorRotulo.second]=-1;//modifica no vetor o RRotulo que ja foi adicionado para que ele não se repita
+
                 maiorRotulo.first=0;//reinicia o numero de arestas como 0
                 maiorRotulo.second=-1;//reinicia o Rotulo como -1
             }
             //FIM FUNÇÃO ORDENA CANDIDATOS
 
 
-        Graph *q = new Graph(this->order, -1);//-1 pois começamos a contar os rotulos do 0, então -1 significa que não a rotulos
+        Graph *q = new Graph(this->order, 0);//-1 pois começamos a contar os rotulos do 0, então -1 significa que não a rotulos
         while (!q->verificaConexo(q))//Enquanto o grafo solução não for conexo repita
         {
 
             int numeroCadidatosPlausiveis=(int) arestasPorRotulo.size()*alfa;//usa o alfa para saber quantas posições da fila temos que analisar
-            if (numeroCadidatosPlausiveis==0)//se acontecer do resultado anterior da fila der 0 o codigo bugaria, logo precisamos considerar essa hipotese
-            {
-                numeroCadidatosPlausiveis=1;
-            }
             //sorteia um numero entre 0 e numeroCadidatosPlausiveis
             srand(time(NULL));
             int k = (rand() % numeroCadidatosPlausiveis);
 
             int contador=0;
-            for (iterador = arestasPorRotulo.begin(); iterador != arestasPorRotulo.end(); iterador++) //percorre todos pares da lista
+            for (iterador = arestasPorRotulo.begin(); iterador != arestasPorRotulo.end(); iterador++) //percorre todos os valores da lista
             {
                 if(contador==k){//quando o contador for igual ao numero sorteado
                     int rotuloAdicionado = *iterador; //rotulo adicionado recebe o valor que esta no iterador 
                     q->adicionaRotulo(rotuloAdicionado,q,this); //chama a função q coloca o Rotulo no grafo e adiciona as arestas desse Rotulo
                     arestasPorRotulo.erase(iterador);//remove a posição sorteada da fila
-                    break;
                 }
                 contador++;
             }
