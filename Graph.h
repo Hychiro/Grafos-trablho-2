@@ -49,39 +49,22 @@ public:
     bool searchNode(int id);
     Node *getNode(int id);
     void insertAllNodes();
-    bool verificaAresta(int id,int target_id);
+    bool verificaAresta(int id, int target_id);
 
-    void funcAtualizaProbAlfas(Graph* melhorSolucao,int numAlfa, float* alfa,float* probAlfa, int* mediaAlfa);
-    int funcEscolheAlfa(int numAlfa,float* alfa, float* probAlfa);
-
+    void funcAtualizaProbAlfas(Graph *melhorSolucao, int numAlfa, float *alfa, float *probAlfa, int *mediaAlfa);
+    
+    int funcEscolheAlfa(int numAlfa, float *alfa, float *probAlfa);
 
     void aumentaQtdRotulos();
     int contaRotulo(int rotuloAnalisado);
     void adicionaRotulo(int rotuloAnalisado, Graph *grafoNovo, Graph *grafoOriginal);
     bool verificaConexo(Graph *grafo);
     Graph *guloso();
-    Graph *gulosoRandomizado(float alfa, int instancia, int numIterações, Graph *melhorSolucao);
-    Graph *gulosoRandomizadoReativo(int instancia, int numIterações, Graph *melhorSolucao,int numAlfa,float* alfa,float* probAlfa, int* mediaAlfa,int*vezesUsada);
+    Graph *gulosoRandomizado(float alfa, int instancia, int numIteracoes, Graph *melhorSolucao);
+    Graph *gulosoRandomizadoReativo(int instancia, int numIteracoes, Graph *melhorSolucao, int numAlfa, float *alfa, float *probAlfa, int *mediaAlfa, int *vezesUsada);
 
-    void fechoTransitivoIndireto(ofstream &output_file, int id);
     void fechoTransitivoDireto(ofstream &output_file, int id);
 
-    bool deepthFirstSearch1(int id, int start);
-    void deepthFirstSearch(Graph *novoGrafo, int start);
-
-    void auxDeepthFirstSearch1(bool verify[], Node *v);
-    int *Graph::topologicalSorting();
-    void auxDeepthFirstSearch(bool verify[], Graph *novoGrafo, Node *v);
-
-    Graph *caminhamentoDeProfundidade(int x);
-    Graph *getVertexInduced(int *listIdNodes, int tam);
-
-    Graph *agmKuskal(ofstream &output_file);
-    void getWeithlessEdge(int *nohAresta);
-    int getWeightFromEdgeNodeCombo(int idNoh, int idAresta, Graph *subGrafo);
-    bool verificaSubarvore(int v1, int v2, Graph *subGrafo);
-
-    Graph *agmPrim(ofstream &output_file);
     void printGraph(ofstream &output_file);
 
     //methods phase1

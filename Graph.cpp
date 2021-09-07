@@ -53,6 +53,7 @@ void Graph::printGraph(ofstream &output_file)
 {
     Node *p = this->first_node;
     Edge *aux = p->getFirstEdge();
+    output_file << this->order << endl;
 
     output_file << "strict graph{" << endl;
     while (p != NULL)
@@ -131,7 +132,7 @@ void Graph::insertAllNodes()
 {
     for (int i = 0; i < this->order; i++)
     {
-        Node *p = new Node(i + 1);
+        Node *p = new Node(i);
         if (this->first_node == NULL)
         {
             this->first_node = p;
@@ -329,11 +330,9 @@ Graph *Graph::guloso()
     }
 }
 
-//int* Graph::ordenaCandidatos()
-
-Graph *Graph::gulosoRandomizado(float alfa, int instancia, int numIterações, Graph *melhorSolucao)
+Graph *Graph::gulosoRandomizado(float alfa, int instancia, int numIteracoes, Graph *melhorSolucao)
 { //deve ser iniciado com Instancia 0 e Grafo melhorSolução==GrafoGerador
-    if (instancia < numIterações)
+    if (instancia < numIteracoes)
     {
 
         //INICIO FUNÇÃO ORDENA CANDIDATOS
@@ -400,7 +399,7 @@ Graph *Graph::gulosoRandomizado(float alfa, int instancia, int numIterações, G
             melhorSolucao = q;
         }
         //chama o método recursivamente
-        this->gulosoRandomizado(alfa, instancia + 1, numIterações, melhorSolucao);
+        this->gulosoRandomizado(alfa, instancia + 1, numIteracoes, melhorSolucao);
     }
     else
     {
@@ -408,13 +407,13 @@ Graph *Graph::gulosoRandomizado(float alfa, int instancia, int numIterações, G
     }
 }
 
-Graph *Graph::gulosoRandomizadoReativo(int instancia, int numIterações, Graph *melhorSolucao, int numAlfa, float *alfa, float *probAlfa, int *mediaAlfa, int *vezesUsada)
+Graph *Graph::gulosoRandomizadoReativo(int instancia, int numIteracoes, Graph *melhorSolucao, int numAlfa, float *alfa, float *probAlfa, int *mediaAlfa, int *vezesUsada)
 { //deve ser iniciado com Instancia 0 e Grafo melhorSolução==GrafoGerador
 
     // func atualiza as probabilidades dos alfas
     funcAtualizaProbAlfas(melhorSolucao, numAlfa, alfa, probAlfa, mediaAlfa);
 
-    if (instancia < numIterações)
+    if (instancia < numIteracoes)
     {
 
         if (instancia < numAlfa)
@@ -487,7 +486,7 @@ Graph *Graph::gulosoRandomizadoReativo(int instancia, int numIterações, Graph 
                 melhorSolucao = q;
             }
             //chama o método recursivamente
-            this->gulosoRandomizadoReativo(instancia + 1, numIterações, melhorSolucao, numAlfa, alfa, probAlfa, mediaAlfa, vezesUsada);
+            this->gulosoRandomizadoReativo(instancia + 1, numIteracoes, melhorSolucao, numAlfa, alfa, probAlfa, mediaAlfa, vezesUsada);
         }
 
         else
@@ -563,7 +562,7 @@ Graph *Graph::gulosoRandomizadoReativo(int instancia, int numIterações, Graph 
                 melhorSolucao = q;
             }
             //chama o método recursivamente
-            this->gulosoRandomizadoReativo(instancia + 1, numIterações, melhorSolucao, numAlfa, alfa, probAlfa, mediaAlfa, vezesUsada);
+            this->gulosoRandomizadoReativo(instancia + 1, numIteracoes, melhorSolucao, numAlfa, alfa, probAlfa, mediaAlfa, vezesUsada);
         }
     }
     else
@@ -698,7 +697,7 @@ void Graph::funcAtualizaProbAlfas(Graph *melhorSolucao, int numAlfa, float *alfa
     }
 }
 
-int funcEscolheAlfa(int numAlfa, float *alfa, float *probAlfa)
+int Graph::funcEscolheAlfa(int numAlfa, float *alfa, float *probAlfa)
 {
 
     int vetValoresDaProbabilidade[numAlfa];

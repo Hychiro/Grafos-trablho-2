@@ -16,7 +16,7 @@
 
 using namespace std;
 
-Graph *leituraInstancia(ifstream &input_file)
+Graph *leituraInstancia(ifstream &input_file, ofstream &output_file)
 {
 
     //Variáveis para auxiliar na criação dos nós no Grafo
@@ -42,16 +42,21 @@ Graph *leituraInstancia(ifstream &input_file)
     //Leitura de arquivo
     while (input_file >> numeroRotulos)
     {
+
         if (coluna < order)
         {
 
             matrixCorAresta[coluna][linha] = numeroRotulos;
+
             coluna++;
         }
-        else if (linha < order - 1)
+        else if (linha < order)
         {
             linha++;
+
             coluna = linha + 1;
+            matrixCorAresta[coluna][linha] = numeroRotulos;
+            coluna++;
         }
         else
         {
@@ -66,6 +71,7 @@ Graph *leituraInstancia(ifstream &input_file)
             if (matrixCorAresta[o][p] != -1 && matrixCorAresta[o][p] != numeroRotulos)
             {
                 graph->insertEdge(o, p, matrixCorAresta[o][p]);
+                output_file << o << " -- " << p << "  Cor: " << matrixCorAresta[o][p] << endl;
             }
         }
     }
@@ -83,11 +89,7 @@ int menu()
     cout << "[1]  Algoritmo Guloso" << endl;
     cout << "[2] Algoritmo Guloso Randomizado" << endl;
     cout << "[3] Algoritmo Guloso Randomizado Reativo" << endl;
-    cout << "[4] Árvore Geradora Mínima de Kruskal" << endl;
-    cout << "[5] Árvore Geradora Mínima de Prim" << endl;
-    cout << "[6] Imprimir caminhamento em Profundidade" << endl;
-    cout << "[9] Printando o Grafo " << endl;
-
+    cout << "[4] Printando o Grafo " << endl;
     cout << "[0] Sair" << endl;
 
     cin >> selecao;
@@ -131,49 +133,21 @@ void selecionar(int selecao, Graph *graph, ofstream &output_file)
     case 3:
     {
         output_file << "Algoritmo Guloso Radomizado Reativo" << endl;
-
-        int numAlfa; // encontra o num total de alfas
-        cout << "Digite o Numero de alfas a serem adicionados:" << endl;
-        cin >> numAlfa;
-        float *alfa = new float[numAlfa];     // guarda todos os alfas em um mesmo vetor
-        float *probAlfa = new float[numAlfa]; // guarda a probabilidade de todos os alfas, utilizar a posição do vetor alfa como referencia
-        int *mediaAlfa = new int[numAlfa];
-        int *vezesUsada = new int[numAlfa];
-        for (int i = 0; i < numAlfa; i++)
-        {
-            cout << "Digite o alfa " << i << ":" << endl;
-            cin >> alfa[i];
-
-            probAlfa[i] = 0;
-            mediaAlfa[i] = 0;
-            vezesUsada[i] = 0;
-        }
+        float alfa;
+        cout << "Digite o alfa:" << endl;
+        cin >> alfa;
 
         int numdInteracoes;
         cout << "Digite o numero de Iteracoes:" << endl;
         cin >> numdInteracoes;
 
-        Graph *novoGrafo = graph->gulosoRandomizadoReativo(0, numdInteracoes, graph, numAlfa, alfa,probAlfa, mediaAlfa,vezesUsada);
+        Graph *novoGrafo = graph->gulosoRandomizado(alfa, 0, numdInteracoes, graph);
         novoGrafo->printGraph(output_file);
         break;
     }
 
     //AGM - Kruscal;
     case 4:
-    {
-        Graph *novoSubGrafo = graph->agmKuskal(output_file);
-        novoSubGrafo->printGraph(output_file);
-        break;
-    }
-    //AGM Prim;
-    case 5:
-    {
-        Graph *grafoX = graph->agmPrim(output_file);
-        grafoX->printGraph(output_file);
-        break;
-    }
-    //Imprimir caminhamento em Profundidade
-    case 6:
     {
 
         graph->printGraph(output_file);
@@ -241,7 +215,7 @@ int main(int argc, char const *argv[])
     if (input_file.is_open())
     {
 
-        graph = leituraInstancia(input_file);
+        graph = leituraInstancia(input_file,output_file);
     }
     else
         cout << "Unable to open " << argv[1];
