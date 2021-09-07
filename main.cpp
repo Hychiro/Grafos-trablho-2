@@ -71,7 +71,7 @@ Graph *leituraInstancia(ifstream &input_file, ofstream &output_file)
             if (matrixCorAresta[o][p] != -1 && matrixCorAresta[o][p] != numeroRotulos)
             {
                 graph->insertEdge(o, p, matrixCorAresta[o][p]);
-                output_file << o << " -- " << p << "  Cor: " << matrixCorAresta[o][p] << endl;
+                
             }
         }
     }
@@ -125,7 +125,9 @@ void selecionar(int selecao, Graph *graph, ofstream &output_file)
         cout << "Digite o numero de Iteracoes:" << endl;
         cin >> numdInteracoes;
 
-        Graph *novoGrafo = graph->gulosoRandomizado(alfa, 0, numdInteracoes, graph);
+        Graph *novoGrafo = graph->gulosoRandomizado(alfa, 0, numdInteracoes, graph, output_file);
+         
+         //nao quer ler abaixo
         novoGrafo->printGraph(output_file);
         break;
     }
@@ -141,7 +143,7 @@ void selecionar(int selecao, Graph *graph, ofstream &output_file)
         cout << "Digite o numero de Iteracoes:" << endl;
         cin >> numdInteracoes;
 
-        Graph *novoGrafo = graph->gulosoRandomizado(alfa, 0, numdInteracoes, graph);
+        Graph *novoGrafo = graph->gulosoRandomizado(alfa, 0, numdInteracoes, graph, output_file);
         novoGrafo->printGraph(output_file);
         break;
     }

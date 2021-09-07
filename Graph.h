@@ -52,15 +52,16 @@ public:
     bool verificaAresta(int id, int target_id);
 
     void funcAtualizaProbAlfas(Graph *melhorSolucao, int numAlfa, float *alfa, float *probAlfa, int *mediaAlfa);
-    
+
     int funcEscolheAlfa(int numAlfa, float *alfa, float *probAlfa);
 
     void aumentaQtdRotulos();
     int contaRotulo(int rotuloAnalisado);
     void adicionaRotulo(int rotuloAnalisado, Graph *grafoNovo, Graph *grafoOriginal);
     bool verificaConexo(Graph *grafo);
+
     Graph *guloso();
-    Graph *gulosoRandomizado(float alfa, int instancia, int numIteracoes, Graph *melhorSolucao);
+    Graph *gulosoRandomizado(float alfa, int instancia, int numIteracoes, Graph *melhorSolucao, ofstream & output_file);
     Graph *gulosoRandomizadoReativo(int instancia, int numIteracoes, Graph *melhorSolucao, int numAlfa, float *alfa, float *probAlfa, int *mediaAlfa, int *vezesUsada);
 
     void fechoTransitivoDireto(ofstream &output_file, int id);

@@ -277,7 +277,6 @@ Graph *Graph::guloso()
     //// função pra ver se é conexo
     if (this->verificaConexo(this)) //verifica se o grafo gerADOR É CONEXO
     {
-
         //INICIO FUNÇÃO ORDENA CANDIDATOS
         std::list<int> arestasPorRotulo; //fila que aramzena os rotulos em ordem decrecente
         std::list<int>::iterator iterador;
@@ -295,12 +294,13 @@ Graph *Graph::guloso()
 
         while (arestasPorRotulo.size() < this->numeroRotulos) //enquanto o tamanho da fila for menor que o numero de Rotulos
         {
+           
             for (int i = 0; i < this->numeroRotulos; i++) //repetir para o numero de rotulos
             {
                 if (maiorRotulo.first <= vetorarestasPorRotulo[i]) //se o numero de arestas do maior Rotulo Atual for menor ou igual do numero de arestas do rotulo a ser analisado (precisa ser menor ou IGUAL pq caso exista um Rotulo com 0 arestas iria bugar o codigo)
                 {
                     maiorRotulo.first = vetorarestasPorRotulo[i]; //numero de arestas do maior rotulo igual ao numero de arestas do rotulo analisado
-                    maiorRotulo.second = i;                       //maior Rotulo igual ao Rotulo analisado
+                    maiorRotulo.second = i;             //maior Rotulo igual ao Rotulo analisado
                 }
             }
             vetorAux[maiorRotulo.second] = maiorRotulo.first;
@@ -312,7 +312,7 @@ Graph *Graph::guloso()
             maiorRotulo.second = -1; //reinicia o Rotulo como -1
         }
         //FIM FUNÇÃO ORDENA CANDIDATOS
-
+        
         Graph *q = new Graph(this->order, 0); //-1 pois começamos a contar os rotulos do 0, então -1 significa que não a rotulos
         while (!q->verificaConexo(q))         //Enquanto o grafo solução não for conexo repita
         {
@@ -330,11 +330,11 @@ Graph *Graph::guloso()
     }
 }
 
-Graph *Graph::gulosoRandomizado(float alfa, int instancia, int numIteracoes, Graph *melhorSolucao)
+Graph *Graph::gulosoRandomizado(float alfa, int instancia, int numIteracoes, Graph *melhorSolucao, ofstream & output_file)
 { //deve ser iniciado com Instancia 0 e Grafo melhorSolução==GrafoGerador
+
     if (instancia < numIteracoes)
     {
-
         //INICIO FUNÇÃO ORDENA CANDIDATOS
         std::list<int> arestasPorRotulo; //fila que aramzena os rotulos em ordem decrecente
         std::list<int>::iterator iterador;
@@ -369,19 +369,21 @@ Graph *Graph::gulosoRandomizado(float alfa, int instancia, int numIteracoes, Gra
             maiorRotulo.second = -1; //reinicia o Rotulo como -1
         }
         //FIM FUNÇÃO ORDENA CANDIDATOS
-
+        
         Graph *q = new Graph(this->order, 0); //-1 pois começamos a contar os rotulos do 0, então -1 significa que não a rotulos
         while (!q->verificaConexo(q))         //Enquanto o grafo solução não for conexo repita
         {
-
-            int numeroCadidatosPlausiveis = (int)arestasPorRotulo.size() * alfa; //usa o alfa para saber quantas posições da fila temos que analisar
+            
+            int numeroCadidatosPlausiveis = ceil(arestasPorRotulo.size() * alfa); //usa o alfa para saber quantas posições da fila temos que analisar
             //sorteia um numero entre 0 e numeroCadidatosPlausiveis
+           
             srand(time(NULL));
             int k = (rand() % numeroCadidatosPlausiveis);
-
+            
             int contador = 0;
             for (iterador = arestasPorRotulo.begin(); iterador != arestasPorRotulo.end(); iterador++) //percorre todos os valores da lista
             {
+                
                 if (contador == k)
                 {                                                 //quando o contador for igual ao numero sorteado
                     int rotuloAdicionado = *iterador;             //rotulo adicionado recebe o valor que esta no iterador
@@ -391,19 +393,25 @@ Graph *Graph::gulosoRandomizado(float alfa, int instancia, int numIteracoes, Gra
                 contador++;
             }
         }
+
+        cout<<endl;
         //saiu do while e a solução já foi encontrada
 
         //compara a solução atual com a melhor solução
-        if ((q->numeroRotulos) < (melhorSolucao->numeroRotulos))
+        if ((q->getNumRotulos()) < (melhorSolucao->getNumRotulos()))
         {
+            
             melhorSolucao = q;
+            
         }
+       
         //chama o método recursivamente
-        this->gulosoRandomizado(alfa, instancia + 1, numIteracoes, melhorSolucao);
+        gulosoRandomizado(alfa, instancia + 1, numIteracoes, melhorSolucao,output_file);
     }
     else
     {
-        return melhorSolucao;
+        Graph *aux = melhorSolucao;
+        return aux;
     }
 }
 
@@ -599,14 +607,14 @@ void Graph::adicionaRotulo(int rotuloAnalisado, Graph *grafoNovo, Graph *grafoOr
     }
 }
 
-bool Graph::verificaConexo(Graph *grafo)
+bool Graph::verificaConexo(Graph *grafo)// ta errado
 {
 
     //com o id do vértice acha o vertice que deve ser analisado
     int idParametro = grafo->getFirstNode()->getId();
     //cria um vetor que marca quais vértices ja foram analisados
     bool visitados[this->order];
-    //cria o vetor ligacao que diz quais vértices se ligam de alguma maneira ao primeiro vertice
+    //cria o vetor ligacao que verifica se tem caminho entre os fertices dizendo quais vértices se ligam de alguma maneira ao primeiro vertice
     bool ligacao[this->order];
     //cria uma fila que diz quais vertices ainda precisam ser analisados
     list<int> fila;
@@ -624,7 +632,7 @@ bool Graph::verificaConexo(Graph *grafo)
     {
         //pega um vértice a ser analisado da fila
         int aux = fila.front();
-        int IdAnalisado = aux - 1;
+        int IdAnalisado = aux;
         Node *V;
         V = getNode(fila.front());
         //exclui ele da fila
@@ -635,6 +643,8 @@ bool Graph::verificaConexo(Graph *grafo)
             //marca o vértice como visitado;
             visitados[IdAnalisado] = true;
             //marca ele como fazendo parrte da ligacao
+
+            // tem caminho
             ligacao[IdAnalisado] = true;
             //adiciona todos os vértices adjacentes a ele na fila
             for (Edge *it = V->getFirstEdge(); it != NULL; it = it->getNextEdge())
@@ -644,12 +654,12 @@ bool Graph::verificaConexo(Graph *grafo)
             }
         }
     }
-
+    
     bool conexo = true;
 
-    for (int i = 0; i < this->order; i++)
+    for (int j = 0; j < this->order; j++)
     {
-        if (ligacao[i] == false)
+        if (ligacao[j] == false)
         {
             conexo = false;
             grafo->conexGraph = false;
