@@ -16,72 +16,6 @@
 
 using namespace std;
 
-/*Graph *leitura(ifstream &input_file, int directed, int weightedEdge, int weightedNode)
-{
-
-    //Variáveis para auxiliar na criação dos nós no Grafo
-    int idNodeSource;
-    int idNodeTarget;
-    int order;
-
-    //Pegando a ordem do grafo
-    input_file >> order;
-
-    //Criando objeto grafo
-    Graph *graph = new Graph(order, directed, weightedEdge, weightedNode);
-
-    //Leitura de arquivo
-
-    if (!graph->getWeightedEdge() && !graph->getWeightedNode())
-    {
-
-        while (input_file >> idNodeSource >> idNodeTarget)
-        {
-
-            graph->insertEdge(idNodeSource, idNodeTarget, 1);
-        }
-    }
-    else if (graph->getWeightedEdge() && !graph->getWeightedNode())
-    {
-
-        float edgeWeight;
-
-        while (input_file >> idNodeSource >> idNodeTarget >> edgeWeight)
-        {
-
-            graph->insertEdge(idNodeSource, idNodeTarget, edgeWeight);
-        }
-    }
-    else if (graph->getWeightedNode() && !graph->getWeightedEdge())
-    {
-
-        float nodeSourceWeight, nodeTargetWeight;
-
-        while (input_file >> idNodeSource >> nodeSourceWeight >> idNodeTarget >> nodeTargetWeight)
-        {
-
-            graph->insertEdge(idNodeSource, idNodeTarget, 1);
-            graph->getNode(idNodeSource)->setWeight(nodeSourceWeight);
-            graph->getNode(idNodeTarget)->setWeight(nodeTargetWeight);
-        }
-    }
-    else if (graph->getWeightedNode() && graph->getWeightedEdge())
-    {
-
-        float nodeSourceWeight, nodeTargetWeight, edgeWeight;
-
-        while (input_file >> idNodeSource >> nodeSourceWeight >> idNodeTarget >> nodeTargetWeight)
-        {
-
-            graph->insertEdge(idNodeSource, idNodeTarget, edgeWeight);
-            graph->getNode(idNodeSource)->setWeight(nodeSourceWeight);
-            graph->getNode(idNodeTarget)->setWeight(nodeTargetWeight);
-        }
-    }
-
-    return graph;
-}*/
-
 Graph *leituraInstancia(ifstream &input_file)
 {
 
@@ -98,9 +32,8 @@ Graph *leituraInstancia(ifstream &input_file)
     {
         for (int j = 0; j < order; j++)
         {
-            matrixCorAresta[k][j]= -1;
+            matrixCorAresta[k][j] = -1;
         }
-        
     }
     //Criando objeto grafo
     Graph *graph = new Graph(order, numeroRotulos);
@@ -111,15 +44,17 @@ Graph *leituraInstancia(ifstream &input_file)
     {
         if (coluna < order)
         {
-            
+
             matrixCorAresta[coluna][linha] = numeroRotulos;
             coluna++;
         }
-        else if( linha < order-1)
+        else if (linha < order - 1)
         {
             linha++;
             coluna = linha + 1;
-        }else{
+        }
+        else
+        {
             break;
         }
     }
@@ -128,13 +63,12 @@ Graph *leituraInstancia(ifstream &input_file)
     {
         for (int p = 0; p < order; p++)
         {
-            if(matrixCorAresta[o][p] != -1 && matrixCorAresta[o][p]!= numeroRotulos){
-                graph->insertEdge(o,p,matrixCorAresta[o][p]);
+            if (matrixCorAresta[o][p] != -1 && matrixCorAresta[o][p] != numeroRotulos)
+            {
+                graph->insertEdge(o, p, matrixCorAresta[o][p]);
             }
         }
-        
     }
-    
 
     return graph;
 }
@@ -146,17 +80,14 @@ int menu()
 
     cout << "MENU" << endl;
     cout << "----" << endl;
-    cout << "[1] fechoTransitivoIndireto" << endl;
-    cout << "[2] Fecho Transitivo Direto" << endl;
-    cout << "[3] Caminho Mínimo entre dois vértices - Floyd" << endl;
+    cout << "[1]  Algoritmo Guloso" << endl;
+    cout << "[2] Algoritmo Guloso Randomizado" << endl;
+    cout << "[3] Algoritmo Guloso Randomizado Reativo" << endl;
     cout << "[4] Árvore Geradora Mínima de Kruskal" << endl;
     cout << "[5] Árvore Geradora Mínima de Prim" << endl;
     cout << "[6] Imprimir caminhamento em Profundidade" << endl;
-    cout << "[7] Imprimir ordenacao topológica" << endl;
-    cout << "[8] Caminho Mínimo entre dois vértices - Dijkstra" << endl;
     cout << "[9] Printando o Grafo " << endl;
-    cout << "[10] Algoritmo Guloso Randomizado Reativo" << endl;
-    cout << "[11] Algoritmo Guloso Randomizado" << endl;
+
     cout << "[0] Sair" << endl;
 
     cin >> selecao;
@@ -169,34 +100,61 @@ void selecionar(int selecao, Graph *graph, ofstream &output_file)
 
     switch (selecao)
     {
-    //fechoTransitivoIndireto;
+    //Algoritmo Guloso;
     case 1:
     {
-        int x;
-        cout << "Digite o id o noh a ser pesquisado: ";
-        cin >> x;
-        graph->fechoTransitivoIndireto(output_file, x);
+
+        cout << "Algoritmo Guloso";
+
+        Graph *novoGrafo = graph->guloso();
+        novoGrafo->printGraph(output_file);
         break;
     }
-    //fechoTransitivoDireto;
+    //Algoritmo Guloso Randomizado;
     case 2:
     {
-        int x;
-        cout << "Digite o id o noh a ser pesquisado: ";
-        cin >> x;
-        graph->fechoTransitivoDireto(output_file, x);
+        cout << "Algoritmo Guloso Radomizado";
+
+        float alfa;
+        cout << "Digite o alfa:" << endl;
+        cin >> alfa;
+
+        int numdInteracoes;
+        cout << "Digite o numero de Iteracoes:" << endl;
+        cin >> numdInteracoes;
+
+        Graph *novoGrafo = graph->gulosoRandomizado(alfa, 0, numdInteracoes, graph);
+        novoGrafo->printGraph(output_file);
         break;
     }
+    //Algoritmo Guloso Radomizado Reativo
     case 3:
     {
-        output_file << "Caminho minimo por Floyd:: " << endl;
-        cout << "Digite o vertice de origem:" << endl;
-        int origem;
-        cin >> origem;
-        cout << "Digite o vertice de destino:" << endl;
-        int destino;
-        cin >> destino;
-        graph->floydMarshall(output_file, origem, destino);
+        output_file << "Algoritmo Guloso Radomizado Reativo" << endl;
+
+        int numAlfa; // encontra o num total de alfas
+        cout << "Digite o Numero de alfas a serem adicionados:" << endl;
+        cin >> numAlfa;
+        float *alfa = new float[numAlfa];     // guarda todos os alfas em um mesmo vetor
+        float *probAlfa = new float[numAlfa]; // guarda a probabilidade de todos os alfas, utilizar a posição do vetor alfa como referencia
+        int *mediaAlfa = new int[numAlfa];
+        int *vezesUsada = new int[numAlfa];
+        for (int i = 0; i < numAlfa; i++)
+        {
+            cout << "Digite o alfa " << i << ":" << endl;
+            cin >> alfa[i];
+
+            probAlfa[i] = 0;
+            mediaAlfa[i] = 0;
+            vezesUsada[i] = 0;
+        }
+
+        int numdInteracoes;
+        cout << "Digite o numero de Iteracoes:" << endl;
+        cin >> numdInteracoes;
+
+        Graph *novoGrafo = graph->gulosoRandomizadoReativo(0, numdInteracoes, graph, numAlfa, alfa,probAlfa, mediaAlfa,vezesUsada);
+        novoGrafo->printGraph(output_file);
         break;
     }
 
@@ -216,56 +174,6 @@ void selecionar(int selecao, Graph *graph, ofstream &output_file)
     }
     //Imprimir caminhamento em Profundidade
     case 6:
-    {
-        int x;
-        cout << "Digite o id o noh a por onde começara o caminhamento: ";
-        cin >> x;
-        Graph *novoGrafo = graph->caminhamentoDeProfundidade(x);
-        novoGrafo->printGraph(output_file);
-        break;
-    }
-    //Ordenação Topologica;
-    case 7:
-    {
-
-        if (graph->getDirected())
-        {
-
-            int *ordTop = graph->topologicalSorting();
-            if ((ordTop != NULL))
-            {
-                output_file << "Ordenação Topologica:" << endl;
-                for (int i = 0; i < graph->getOrder(); i++)
-                {
-                    output_file << ordTop[i];
-                    output_file << endl;
-                }
-            }
-            else
-            {
-                output_file << "Grafo possui circuito, nao possui ordenação topologica" << endl;
-            }
-        }
-        else
-        {
-            output_file << "Grafo não direcionado -  nao possui ordenação topologica" << endl;
-        }
-
-        break;
-    }
-    //Caminho Mínimo entre dois vértices - Dijkstra
-    case 8:
-    {
-        int x, y;
-        cout << "Digite o id Source: ";
-        cin >> x;
-        cout << "Digite o id Target: ";
-        cin >> y;
-        graph->dijkstra(output_file, x, y);
-        break;
-    }
-    //Printa grafo
-    case 9:
     {
 
         graph->printGraph(output_file);
@@ -305,10 +213,10 @@ int main(int argc, char const *argv[])
 {
 
     //Verificação se todos os parâmetros do programa foram entrados
-    if (argc != 6)
+    if (argc != 3)
     {
 
-        cout << "ERROR: Expecting: ./<program_name> <input_file> <output_file> <directed> <weighted_edge> <weighted_node> " << endl;
+        cout << "ERROR: Expecting: ./<program_name> <input_file> <output_file>" << endl;
         return 1;
     }
 
@@ -333,7 +241,7 @@ int main(int argc, char const *argv[])
     if (input_file.is_open())
     {
 
-        graph = leitura(input_file, atoi(argv[3]), atoi(argv[4]), atoi(argv[5]));
+        graph = leituraInstancia(input_file);
     }
     else
         cout << "Unable to open " << argv[1];

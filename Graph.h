@@ -12,79 +12,85 @@
 #include <stack>
 #include <list>
 #include <sstream>
-#include<string>
+#include <string>
 
 using namespace std;
 
-class Graph{
+class Graph
+{
 
-    
     //Atributes
-    private:
-        int order;
-        int number_edges;
-        bool conexGraph;
-        Node* first_node;
-        Node* last_node;
-        std::list<int> rotulos;
-        std::list<int>::iterator iteradorRotulos;
-        int numeroRotulos;
+private:
+    int order;
+    int number_edges;
+    bool conexGraph;
+    Node *first_node;
+    Node *last_node;
+    std::list<int> rotulos;
+    std::list<int>::iterator iteradorRotulos;
+    int numeroRotulos;
 
-    public:
-        //Constructor
-        Graph(int order, int numeroRotulos);
-        //Destructor
-        ~Graph();
-        //Getters
-        int getOrder();
-        int getNumberEdges();
-        Node* getFirstNode();
-        Node* getLastNode();
-        bool getConexGraph();
-        //Other methods
-        void insertNode(int id);
-        void insertEdge(int id, int target_id, int rotulo);
-        void removeNode(int id);
-        bool searchNode(int id);
-        Node* getNode(int id);
-        void insertAllNodes();
-        //bool verificaAresta(id, target_id);
+public:
+    //Constructor
+    Graph(int order, int numeroRotulos);
+    //Destructor
+    ~Graph();
+    //Getters
+    int getOrder();
+    int getNumberEdges();
+    Node *getFirstNode();
+    Node *getLastNode();
+    bool getConexGraph();
+    int getNumRotulos();
+    //Other methods
+    void insertNode(int id);
+    void insertEdge(int id, int target_id, int rotulo);
+    void removeNode(int id);
+    bool searchNode(int id);
+    Node *getNode(int id);
+    void insertAllNodes();
+    bool verificaAresta(int id,int target_id);
 
-        int contaRotulo(int rotuloAnalisado);
-       void adicionaRotulo(int rotuloAnalisado, Graph *grafoNovo, Graph *grafoOriginal);
-        bool verificaConexo(Graph *grafo);
-        Graph* guloso();
-        Graph* gulosoRandomizado(float alfa,int instancia, int numIterações,Graph* melhorSolucao);
+    void funcAtualizaProbAlfas(Graph* melhorSolucao,int numAlfa, float* alfa,float* probAlfa, int* mediaAlfa);
+    int funcEscolheAlfa(int numAlfa,float* alfa, float* probAlfa);
 
-        void fechoTransitivoIndireto(ofstream &output_file, int id);
-        void fechoTransitivoDireto(ofstream &output_file, int id);
 
-        bool deepthFirstSearch1(int id, int start);
-        void deepthFirstSearch(Graph *novoGrafo, int start);
+    void aumentaQtdRotulos();
+    int contaRotulo(int rotuloAnalisado);
+    void adicionaRotulo(int rotuloAnalisado, Graph *grafoNovo, Graph *grafoOriginal);
+    bool verificaConexo(Graph *grafo);
+    Graph *guloso();
+    Graph *gulosoRandomizado(float alfa, int instancia, int numIterações, Graph *melhorSolucao);
+    Graph *gulosoRandomizadoReativo(int instancia, int numIterações, Graph *melhorSolucao,int numAlfa,float* alfa,float* probAlfa, int* mediaAlfa,int*vezesUsada);
 
-        void auxDeepthFirstSearch1(bool verify[], Node *v);
-        int *Graph::topologicalSorting();
-        void auxDeepthFirstSearch(bool verify[], Graph *novoGrafo, Node *v);
+    void fechoTransitivoIndireto(ofstream &output_file, int id);
+    void fechoTransitivoDireto(ofstream &output_file, int id);
 
-        Graph* caminhamentoDeProfundidade(int x);
-        Graph *getVertexInduced(int *listIdNodes, int tam);
-        
-        Graph *agmKuskal(ofstream &output_file);
-        void getWeithlessEdge( int *nohAresta);
-        int getWeightFromEdgeNodeCombo(int idNoh, int idAresta, Graph *subGrafo);
-        bool verificaSubarvore(int v1, int v2, Graph *subGrafo);
+    bool deepthFirstSearch1(int id, int start);
+    void deepthFirstSearch(Graph *novoGrafo, int start);
 
-        Graph *agmPrim(ofstream &output_file);
-        void printGraph(ofstream &output_file);
-        
-        //methods phase1
-        float greed();
-        float greedRandom();
-        float greedRactiveRandom();
-    private:
-        //Auxiliar methods
-        
+    void auxDeepthFirstSearch1(bool verify[], Node *v);
+    int *Graph::topologicalSorting();
+    void auxDeepthFirstSearch(bool verify[], Graph *novoGrafo, Node *v);
 
+    Graph *caminhamentoDeProfundidade(int x);
+    Graph *getVertexInduced(int *listIdNodes, int tam);
+
+    Graph *agmKuskal(ofstream &output_file);
+    void getWeithlessEdge(int *nohAresta);
+    int getWeightFromEdgeNodeCombo(int idNoh, int idAresta, Graph *subGrafo);
+    bool verificaSubarvore(int v1, int v2, Graph *subGrafo);
+
+    Graph *agmPrim(ofstream &output_file);
+    void printGraph(ofstream &output_file);
+
+    //methods phase1
+    float greed();
+    float greedRandom();
+    float greedRactiveRandom();
+
+private:
+    //Auxiliar methods
 };
 
 #endif // GRAPH_H_INCLUDED
