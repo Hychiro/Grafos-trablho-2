@@ -54,6 +54,7 @@
         "hashtable": "cpp",
         "random": "cpp",
         "regex": "cpp",
-        "valarray": "cpp"
+        "valarray": "cpp",
+        "string": "cpp"
     }
 }

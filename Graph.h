@@ -48,16 +48,22 @@ class Graph{
         bool searchNode(int id);
         Node* getNode(int id);
         void insertAllNodes();
-        bool verificaAresta(id, target_id);
+        //bool verificaAresta(id, target_id);
 
-        int contaRotulo(int rotuloAnalisado,Graph *grafoOriginal);
-       
+        int contaRotulo(int rotuloAnalisado);
+       void adicionaRotulo(int rotuloAnalisado, Graph *grafoNovo, Graph *grafoOriginal);
+        bool verificaConexo(Graph *grafo);
+        Graph* guloso();
+        Graph* gulosoRandomizado(float alfa,int instancia, int numIterações,Graph* melhorSolucao);
+
         void fechoTransitivoIndireto(ofstream &output_file, int id);
+        void fechoTransitivoDireto(ofstream &output_file, int id);
 
         bool deepthFirstSearch1(int id, int start);
         void deepthFirstSearch(Graph *novoGrafo, int start);
 
         void auxDeepthFirstSearch1(bool verify[], Node *v);
+        int *Graph::topologicalSorting();
         void auxDeepthFirstSearch(bool verify[], Graph *novoGrafo, Node *v);
 
         Graph* caminhamentoDeProfundidade(int x);

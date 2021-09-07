@@ -140,7 +140,7 @@ void Graph::insertAllNodes()
     }
 }
 
-bool Graph::verificaAresta(id, target_id)
+/*bool Graph::verificaAresta(id, target_id)
 {
     Node *p = getId(id);
     for (Edge *g = p->getFirstEdge(); g != NULL; g = g->getNextEdge())
@@ -152,7 +152,7 @@ bool Graph::verificaAresta(id, target_id)
         }
     }
     return false;
-}
+}*/
 
 void Graph::insertEdge(int id, int target_id, int rotulo)
 {
@@ -160,8 +160,8 @@ void Graph::insertEdge(int id, int target_id, int rotulo)
     if (searchNode(id)) //<-- ta sendo direcionado prestar atenção nisso.
     {
 
-        if (!verificaAresta(id, target_id))
-        {
+        //if (!verificaAresta(id, target_id))
+        //{
             Node *p = getNode(id);
             Node *sup = getNode(target_id);
             p->insertEdge(target_id, rotulo);
@@ -174,7 +174,7 @@ void Graph::insertEdge(int id, int target_id, int rotulo)
             {
                 this->rotulos.push_back(rotulo);
             }
-        }
+        //}
     }
 }
 
@@ -210,9 +210,22 @@ void Graph::removeNode(int id) // pfv dps me ajudem a revisar esse removeNode
                 last_node = previousN;
             }
             // dps arrumar pra ser algo mais bonito, usando  remove edge, q eu n sei usar...
-            sup->setNextEdge(k->getNextEdge());
-            k = NULL;
-            k = sup->getNextEdge();
+                for (Node *i = first_node; i != NULL; i->getNextNode())
+                {
+                    Edge *k = i->getFirstEdge();
+                    while (k != NULL)
+                    {
+                        sup = k;
+                        k->getNextEdge();
+
+                        if (k->getTargetId() == p->getId())
+                        {
+                            sup->setNextEdge(k->getNextEdge());
+                            k = NULL;
+                            k = sup->getNextEdge();
+                        }
+                    }
+                }
             p->removeAllEdges();
             p = NULL;
         }
@@ -253,46 +266,217 @@ Node *Graph::getNode(int id)
 
 ///////////////////////GULOSOS///////////////////////FAMINTOS////////////////////
 
-int Graph::greed()
+Graph* Graph::guloso()
 {
     //// função pra ver se é conexo
-    if (this->conexGraph)
+    if (this->verificaConexo(this))//verifica se o grafo gerADOR É CONEXO
     {
-        Graph q = new Graph(this->order, 0);
-        while (!q->getConexGraph())
-        {
-            rotulo = //seleciona 1 coloração com maior numero de arestas G// heuristica
-            //Q->aumentaNumCor();
-            
-            Node *p = this->first_node;
-            Edge *aux = p->getFirstEdge();            
-            while (p != NULL)
-            {
 
-                aux = p->getFirstEdge();
-                while (aux != NULL)
-                {
-                    if(aux->getRotulo()==rotulo){
-                        
-                    }
-                   
-                    aux = aux->getNextEdge();
-                }
-                p = p->getNextNode();
+            //INICIO FUNÇÃO ORDENA CANDIDATOS
+            std::list<int> arestasPorRotulo;//fila que aramzena os rotulos em ordem decrecente
+            std::list<int>::iterator iterador;
+            int vetorarestasPorRotulo[this->numeroRotulos];//vetor que faz relação posição=Rotulo e valor da posição=numero de arestas;
+            for(int i=0;i<this->numeroRotulos;i++){//repetir para o numero de rotulos
+                vetorarestasPorRotulo[i]=contaRotulo(i);//para a posição i(que representa o Rótulo i) atribui o valor numero de arestas do Rotulo i
             }
-            adiciona as arestas dessa cor em Q
+
+            pair<int, int> maiorRotulo;//par que representa o maior rotulo atual <numero de arestas,Rotulo>
+            maiorRotulo.first=0;//inicia o numero de arestas como 0
+            maiorRotulo.second=-1;//inicia o Rotulo como -1
+
+            while(arestasPorRotulo.size()<numeroRotulos)//enquanto o tamanho da fila for menor que o numero de Rotulos
+            {
+                for(int i=0;i<this->numeroRotulos;i++)//repetir para o numero de rotulos
+                {
+                    if(maiorRotulo.first<= vetorarestasPorRotulo[i])//se o numero de arestas do maior Rotulo Atual for menor ou igual do numero de arestas do rotulo a ser analisado (precisa ser menor ou IGUAL pq caso exista um Rotulo com 0 arestas iria bugar o codigo)
+                    {
+                        maiorRotulo.first=vetorarestasPorRotulo[i];//numero de arestas do maior rotulo igual ao numero de arestas do rotulo analisado
+                        maiorRotulo.second=i;//maior Rotulo igual ao Rotulo analisado
+                    }
+                }
+                arestasPorRotulo.push_back(maiorRotulo.second);//adiciona na parte de tras da fila o maior Rotulo da iteração
+                maiorRotulo.first=0;//reinicia o numero de arestas como 0
+                maiorRotulo.second=-1;//reinicia o Rotulo como -1
+            }
+            //FIM FUNÇÃO ORDENA CANDIDATOS
+
+
+        Graph *q = new Graph(this->order, -1);//-1 pois começamos a contar os rotulos do 0, então -1 significa que não a rotulos
+        while (!q->verificaConexo(q))//Enquanto o grafo solução não for conexo repita
+        {
+            //Heuristica
+            int rotuloAdicionado = arestasPorRotulo.front();
+            q->adicionaRotulo(rotuloAdicionado,q,this); //chama a função q coloca o Rotulo no grafo e adiciona as arestas desse Rotulo
+            arestasPorRotulo.pop_front();//remove o topo da fila
         }
+            
+    return q;
     }
     else
     {
-        return null;
+        return NULL;
     }
-    return q;
 }
 
-void Graph::adicionaRotulo(int rotuloAnalisado, Graph *grafoOriginal)
+//int* Graph::ordenaCandidatos()
+
+Graph* Graph::gulosoRandomizado(float alfa,int instancia,int numIterações,Graph* melhorSolucao){//deve ser iniciado com Instancia 0 e Grafo melhorSolução==GrafoGerador
+    if(instancia<numIterações)
+    {
+
+        //INICIO FUNÇÃO ORDENA CANDIDATOS
+            std::list<int> arestasPorRotulo;//fila que aramzena os rotulos em ordem decrecente
+            std::list<int>::iterator iterador;
+            int vetorarestasPorRotulo[this->numeroRotulos];//vetor que faz relação posição=Rotulo e valor da posição=numero de arestas;
+            for(int i=0;i<this->numeroRotulos;i++){//repetir para o numero de rotulos
+                vetorarestasPorRotulo[i]=contaRotulo(i);//para a posição i(que representa o Rótulo i) atribui o valor numero de arestas do Rotulo i
+            }
+
+            pair<int, int> maiorRotulo;//par que representa o maior rotulo atual <numero de arestas,Rotulo>
+            maiorRotulo.first=0;//inicia o numero de arestas como 0
+            maiorRotulo.second=-1;//inicia o Rotulo como -1
+
+            while(arestasPorRotulo.size()<numeroRotulos)//enquanto o tamanho da fila for menor que o numero de Rotulos
+            {
+                for(int i=0;i<this->numeroRotulos;i++)//repetir para o numero de rotulos
+                {
+                    if(maiorRotulo.first<= vetorarestasPorRotulo[i])//se o numero de arestas do maior Rotulo Atual for menor ou igual do numero de arestas do rotulo a ser analisado (precisa ser menor ou IGUAL pq caso exista um Rotulo com 0 arestas iria bugar o codigo)
+                    {
+                        maiorRotulo.first=vetorarestasPorRotulo[i];//numero de arestas do maior rotulo igual ao numero de arestas do rotulo analisado
+                        maiorRotulo.second=i;//maior Rotulo igual ao Rotulo analisado
+                    }
+                }
+                arestasPorRotulo.push_back(maiorRotulo.second);//adiciona na parte de tras da fila o maior Rotulo da iteração
+                maiorRotulo.first=0;//reinicia o numero de arestas como 0
+                maiorRotulo.second=-1;//reinicia o Rotulo como -1
+            }
+            //FIM FUNÇÃO ORDENA CANDIDATOS
+
+
+        Graph *q = new Graph(this->order, -1);//-1 pois começamos a contar os rotulos do 0, então -1 significa que não a rotulos
+        while (!q->verificaConexo(q))//Enquanto o grafo solução não for conexo repita
+        {
+
+            int numeroCadidatosPlausiveis=(int) arestasPorRotulo.size()*alfa;//usa o alfa para saber quantas posições da fila temos que analisar
+            if (numeroCadidatosPlausiveis==0)//se acontecer do resultado anterior da fila der 0 o codigo bugaria, logo precisamos considerar essa hipotese
+            {
+                numeroCadidatosPlausiveis=1;
+            }
+            //sorteia um numero entre 0 e numeroCadidatosPlausiveis
+            srand(time(NULL));
+            int k = (rand() % numeroCadidatosPlausiveis);
+
+            int contador=0;
+            for (iterador = arestasPorRotulo.begin(); iterador != arestasPorRotulo.end(); iterador++) //percorre todos pares da lista
+            {
+                if(contador==k){//quando o contador for igual ao numero sorteado
+                    int rotuloAdicionado = *iterador; //rotulo adicionado recebe o valor que esta no iterador 
+                    q->adicionaRotulo(rotuloAdicionado,q,this); //chama a função q coloca o Rotulo no grafo e adiciona as arestas desse Rotulo
+                    arestasPorRotulo.erase(iterador);//remove a posição sorteada da fila
+                    break;
+                }
+                contador++;
+            }
+        }
+        //saiu do while e a solução já foi encontrada
+
+        //compara a solução atual com a melhor solução 
+        if(   (q->numeroRotulos)  <  (melhorSolucao->numeroRotulos)  )
+        {
+            melhorSolucao=q;
+        }
+        //chama o método recursivamente
+        this->gulosoRandomizado(alfa,instancia+1,numIterações, melhorSolucao);
+    }
+    else{
+        return melhorSolucao;
+    }
+}
+
+
+
+void Graph::adicionaRotulo(int rotuloAnalisado, Graph *grafoNovo,Graph *grafoOriginal)
 {
-    
+    //adiciona o Rotulo no grafoNovo
+    list<int> aux=grafoNovo->rotulos;
+    aux.push_back(rotuloAnalisado);
+    grafoNovo->rotulos=aux;
+    grafoNovo->numeroRotulos=grafoNovo->numeroRotulos+1;
+
+
+    //percorre todas as arestas
+    for (Node *it = grafoOriginal->getFirstNode(); it != NULL; it = it->getNextNode())
+    {
+
+        for (Edge *it2 = it->getFirstEdge(); it2 != NULL; it2 = it2->getNextEdge())
+        {
+            if (it2->getRotulo() == rotuloAnalisado)//se o rotulo da aresta for igual ao rotuloAnalisado
+            {
+                grafoNovo->insertEdge(it->getId(),it2->getTargetId(),rotuloAnalisado);//adiciona a aresta no grafoNovo
+            }
+        }
+    }
+}
+
+bool Graph::verificaConexo(Graph *grafo){
+
+    //com o id do vértice acha o vertice que deve ser analisado
+    int idParametro = grafo->getFirstNode()->getId();
+    //cria um vetor que marca quais vértices ja foram analisados
+    bool visitados[this->order];
+    //cria o vetor ligacao que diz quais vértices se ligam de alguma maneira ao primeiro vertice
+    bool ligacao[this->order];
+    //cria uma fila que diz quais vertices ainda precisam ser analisados
+    list<int> fila;
+    //adiciona o vertice inicial nele
+    fila.push_front(idParametro);
+
+    for (int i = 0; i < this->order; i++)
+    {
+        visitados[i] = false;
+        ligacao[i] = false;
+    }
+
+    //começa iteração (enquanto a fila não estiver vazia repita)
+    while (!(fila.empty()))
+    {
+        //pega um vértice a ser analisado da fila
+        int aux = fila.front();
+        int IdAnalisado = aux - 1;
+        Node *V;
+        V = getNode(fila.front());
+        //exclui ele da fila
+        fila.pop_front();
+        //verifica se o vértice a ser analisado ja foi analisado. (se ele ja foi acaba essa iteração)
+        if (visitados[IdAnalisado] == false)
+        {
+            //marca o vértice como visitado;
+            visitados[IdAnalisado] = true;
+            //marca ele como fazendo parrte da ligacao
+            ligacao[IdAnalisado] = true;
+            //adiciona todos os vértices adjacentes a ele na fila
+            for (Edge *it = V->getFirstEdge(); it != NULL; it = it->getNextEdge())
+            {
+                int verticeAdjacente = it->getTargetId();
+                fila.push_front(verticeAdjacente);
+            }
+        }
+    }
+
+    bool conexo=true;
+
+    for(int i=0;i<this->order;i++){
+        if (ligacao[i]==false)
+        {
+            conexo=false;
+            grafo->conexGraph=false;
+        }
+        else{
+            grafo->conexGraph=true;
+        }
+        
+    }
+    return conexo;
 }
 
 int Graph::contaRotulo(int rotuloAnalisado)
@@ -301,22 +485,19 @@ int Graph::contaRotulo(int rotuloAnalisado)
     int numeroArestas;
 
     for (Node *it = this->getFirstNode(); it != NULL; it = it->getNextNode())
-{
-
-    int numeroArestas;
-
-    for (Node *it = this->getFirstNode(); it != NULL; it = it->getNextNode())
     {
+
         for (Edge *it2 = it->getFirstEdge(); it2 != NULL; it2 = it2->getNextEdge())
         {
-            if (it2->getRotulo == rotuloAnalisado)
+            if (it2->getRotulo() == rotuloAnalisado)
             {
                 numeroArestas++;
             }
         }
     }
-    return numeroArestas;
+    return numeroArestas/2;// tem q voltar dividido por 2 pq todas arestas foram adicionados 2 vezes, logo serão somadas duas vezes
 }
+
 
 //Function that prints a set of edges belongs breadth tree
 
@@ -350,184 +531,63 @@ void Graph::fechoTransitivoDireto(ofstream &output_file, int id)
         FTD[i] = false;
     }
 
-    if (!verify[idParametro])
+    //começa iteração (enquanto a fila não estiver vazia repita)
+    while (!(fila.empty()))
     {
-
-        aux = getNode(p->getTargetId());
-        //AUX-BuscaPorProfundidade (G,w)
-        auxDeepthFirstSearch1(verify, aux);
+        //pega um vértice a ser analisado da fila
+        int aux = fila.front();
+        int IdAnalisado = aux - 1;
+        Node *V;
+        V = getNode(fila.front());
+        //exclui ele da fila
+        fila.pop_front();
+        //verifica se o vértice a ser analisado ja foi analisado. (se ele ja foi acaba essa iteração)
+        if (visitados[IdAnalisado] == false)
+        {
+            //marca o vértice como visitado;
+            visitados[IdAnalisado] = true;
+            //adiciona ele no vetor fecho transitivo direto
+            FTD[IdAnalisado] = true;
+            //adiciona todos os vértices adjacentes a ele na fila
+            for (Edge *it = V->getFirstEdge(); it != NULL; it = it->getNextEdge())
+            {
+                int verticeAdjacente = it->getTargetId();
+                fila.push_front(verticeAdjacente);
+            }
+        }
     }
-}
 
-
-////deepthFirstSearch realizar a busca por profundidade a partir de um ponto de referencia do grafo.
-void Graph::deepthFirstSearch(Graph *novoGrafo, int start)
-{
-
-    //Cria vetor verificador e o vetor predecessor de profundidade
-    bool *verify = new bool[this->order];
-
-    int idParametro;
+    //imprimir o FTD
+    output_file << "O conjunto FTD do vértice " << id << " é: {";
+    int contador = 0;
     for (int i = 0; i < this->order; i++)
     {
-        verify[i] = false;
-    }
-    //cria o vetor auxiliar
-    Node *p;
-    //verifica o no de entrada para começar a busca
-
-    //Para todo v em G
-    for (p = getNode(start); NULL != p; p = p->getNextNode())
-    {
-
-        idParametro = p->getId() - 1;
-        //Se v não visitado entao
-        if (!verify[idParametro])
+        if (FTD[i] == true)
         {
-            novoGrafo->insertNode(p->getId());
-            //AUX-BuscaPorProfundidade (G,v)
-            auxDeepthFirstSearch(verify, novoGrafo, p);
-            break;
+            contador++;
         }
     }
-}
-
-void Graph::auxDeepthFirstSearch(bool verify[], Graph *novoGrafo, Node *v)
-{
-    //Protocolo inicial.
-    int idParametro = v->getId() - 1;
-
-    Node *aux;
-    //Marca v como visitado
-
-    verify[idParametro] = true;
-
-    //Para todo w em Adj(v)
-    for (Edge *p = v->getFirstEdge(); p != NULL; p = p->getNextEdge())
+    for (int i = 0; i < this->order; i++)
     {
-
-        idParametro = p->getTargetId() - 1;
-        //Se w não visitado então
-
-        if (!verify[idParametro])
+        if (FTD[i] == true)
         {
-            novoGrafo->insertNode(p->getTargetId());
-            //Inserir aresta na arvore
-            novoGrafo->insertEdge(v->getId(), p->getTargetId(), p->getWeight());
-
-            aux = getNode(p->getTargetId());
-            //AUX-BuscaPorProfundidade (G,w)
-            auxDeepthFirstSearch(verify, novoGrafo, aux);
+            if (contador - 1 > 0)
+            {
+                output_file << i + 1 << ", ";
+                contador--;
+            }
+            else if (contador - 1 == 0)
+            {
+                output_file << i + 1;
+            }
         }
     }
+    output_file << "}" << endl;
 }
+
+
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 ///////////////////////////////////////////////////////CAMINHAMENTO,ALGORITMOS E ORDENACAO TOPOLOGICA///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-Graph *Graph::caminhamentoDeProfundidade(int x)
-{
-
-    Graph *novoGrafo = new Graph(this->directed, this->weighted_edge, this->weighted_node);
-    deepthFirstSearch(novoGrafo, x);
-    return novoGrafo;
-}
-
-// função que imprime uma classificação topológica
-int *Graph::topologicalSorting()
-{
-    int *vetor = new int(this->order); //alocando o vetor para ordenaçao topologica
-    if (this->graphtemCiclo())
-        // verifica se o grafo tem circuito ou nao
-        return NULL;
-    else
-    {
-        int i = 0;
-        Edge *auxAres;
-        Node *auxNo;
-        queue<Node *> filaTopologica; //fila auxiliar para os nos de origem
-                                      //procurando nos com enttrada =0
-        for (auxNo = this->first_node; auxNo != NULL; auxNo = auxNo->getNextNode())
-        {
-            if (auxNo->getInDegree() == 0) // se entrada  = 0
-            {
-                filaTopologica.push(auxNo); //coloca os nos corretos na fila
-            }
-        }
-        while (!filaTopologica.empty()) // enquanto fila e vazia
-        {
-            vetor[i] = filaTopologica.front()->getId();       //coloca o id do no a ser removido da fila
-            auxAres = filaTopologica.front()->getFirstEdge(); // obtendo a primeiro no
-            filaTopologica.pop();                             //remve da fila
-            while (auxAres != NULL)
-            {
-                auxNo = this->getNode(auxAres->getTargetId()); //pega o no vizinho
-                auxNo->decrementInDegree();                    //decrementa a entrada
-                i
-                    f(auxNo->getInDegree() == 0)
-                { //se a entrada = 0
-                    filaTopologica.push(auxNo);
-                }
-            }
-            i++;
-        }
-        return vetor; //retorna a classificação topologica em um vetor
-    }
-}
-}
-
-    int pesoTotal = 0;
-while (!listaAux.empty())
-{
-    pair<int, int> distancia_no = listaAux.front(); //copia par (id do vertice e distancia) do topo
-    int v1 = distancia_no.first;
-    int v2 = distancia_no.second;
-    pesoTotal = pesoTotal + getWeightFromEdgeNodeCombo(v1, v2, arvoreGerMin);
-    listaAux.pop_front();
-}
-output_file << "Peso da Arvore Geradora Minima: " << pesoTotal << endl;
-
-    return fti[v1 - 1];
-}
-
-//pega o peso da aresta atravez do int idNoh, int idAresta, Graph *subGrafo
-int Graph::getWeightFromEdgeNodeCombo(int idNoh, int idAresta, Graph *subGrafo)
-{
-    Node *p = subGrafo->getNode(idNoh);
-    Edge *aux;
-    for (aux = p->getFirstEdge(); aux != NULL; aux = aux->getNextEdge())
-    {
-        if (aux->getTargetId() == idAresta)
-        {
-            break;
-        }
-    }
-    return aux->getWeight();
-}
-
-//procura a aresta de menor peso e adiciona os dados dos vertices de entrada, saida e o seu proprio peso no vetor
-void Graph::getWeithlessEdge(int *nohAresta)
-{
-
-    Node *p = this->first_node;
-    Edge *aux = p->getFirstEdge();
-    int menor = 9999999;
-    while (p != NULL)
-    {
-
-        aux = p->getFirstEdge();
-        while (aux != NULL)
-        {
-            if (aux->getWeight() < menor)
-            {
-                nohAresta[0] = p->getId();
-                nohAresta[1] = aux->getTargetId();
-                nohAresta[2] = aux->getWeight();
-                menor = aux->getWeight();
-            }
-            aux = aux->getNextEdge();
-        }
-        p = p->getNextNode();
-    }
-}
