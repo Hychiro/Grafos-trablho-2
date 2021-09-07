@@ -106,16 +106,16 @@ void selecionar(int selecao, Graph *graph, ofstream &output_file)
     case 1:
     {
 
-        cout << "Algoritmo Guloso";
+        output_file << "Algoritmo Guloso"<< endl;
 
-        Graph *novoGrafo = graph->guloso();
+        Graph *novoGrafo = graph->guloso(output_file);
         novoGrafo->printGraph(output_file);
         break;
     }
     //Algoritmo Guloso Randomizado;
     case 2:
     {
-        cout << "Algoritmo Guloso Radomizado";
+        output_file << "Algoritmo Guloso Radomizado"<< endl;
 
         float alfa;
         cout << "Digite o alfa:" << endl;
@@ -124,10 +124,8 @@ void selecionar(int selecao, Graph *graph, ofstream &output_file)
         int numdInteracoes;
         cout << "Digite o numero de Iteracoes:" << endl;
         cin >> numdInteracoes;
-
+        srand((unsigned)time(NULL));
         Graph *novoGrafo = graph->gulosoRandomizado(alfa, 0, numdInteracoes, graph, output_file);
-         
-         //nao quer ler abaixo
         novoGrafo->printGraph(output_file);
         break;
     }
@@ -135,15 +133,29 @@ void selecionar(int selecao, Graph *graph, ofstream &output_file)
     case 3:
     {
         output_file << "Algoritmo Guloso Radomizado Reativo" << endl;
-        float alfa;
-        cout << "Digite o alfa:" << endl;
-        cin >> alfa;
+
+        int numAlfa; // encontra o num total de alfas
+        cout << "Digite o Numero de alfas a serem adicionados:" << endl;
+        cin >> numAlfa;
+        float *alfa = new float[numAlfa];     // guarda todos os alfas em um mesmo vetor
+        float *probAlfa = new float[numAlfa]; // guarda a probabilidade de todos os alfas, utilizar a posição do vetor alfa como referencia
+        int *mediaAlfa = new int[numAlfa];
+        int *vezesUsada = new int[numAlfa];
+        for (int i = 0; i < numAlfa; i++)
+        {
+            cout << "Digite o alfa " << i << ":" << endl;
+            cin >> alfa[i];
+
+            probAlfa[i] = 0;
+            mediaAlfa[i] = 0;
+            vezesUsada[i] = 0;
+        }
 
         int numdInteracoes;
         cout << "Digite o numero de Iteracoes:" << endl;
         cin >> numdInteracoes;
-
-        Graph *novoGrafo = graph->gulosoRandomizado(alfa, 0, numdInteracoes, graph, output_file);
+        srand((unsigned)time(NULL));
+        Graph *novoGrafo = graph->gulosoRandomizadoReativo(0, numdInteracoes, graph, numAlfa, alfa,probAlfa, mediaAlfa,vezesUsada, output_file);
         novoGrafo->printGraph(output_file);
         break;
     }
