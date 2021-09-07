@@ -36,10 +36,10 @@ class Node{
         Node* getNextNode();
         // Setters
         void setNextNode(Node* node);
-        void setWeight(float weight);
+        void setRotulo(int rotulo);
         // Other methods
         bool searchEdge(int target_id);
-        void insertEdge(int target_id, float weight);
+        void insertEdge(int target_id, int rotulo);
         void removeAllEdges();
         int removeEdge(int id, bool directed, Node* target_node);
         void incrementOutDegree();

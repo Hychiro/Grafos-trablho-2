@@ -23,36 +23,35 @@ class Graph{
     private:
         int order;
         int number_edges;
-        bool directed;
-        bool weighted_edge;
-        bool weighted_node;
         bool conexGraph;
         Node* first_node;
         Node* last_node;
+        std::list<int> rotulos;
+        std::list<int>::iterator iteradorRotulos;
+        int numeroRotulos;
 
     public:
         //Constructor
-        Graph(int order, bool directed, bool weighted_edge, bool weighted_node);
-        Graph(bool directed, bool weighted_edge, bool weighted_node);
+        Graph(int order, int numeroRotulos);
         //Destructor
         ~Graph();
         //Getters
         int getOrder();
         int getNumberEdges();
-        bool getDirected();
-        bool getWeightedEdge();
-        bool getWeightedNode();
         Node* getFirstNode();
         Node* getLastNode();
+        bool getConexGraph();
         //Other methods
         void insertNode(int id);
-        void insertEdge(int id, int target_id, float weight);
+        void insertEdge(int id, int target_id, int rotulo);
         void removeNode(int id);
         bool searchNode(int id);
         Node* getNode(int id);
         void insertAllNodes();
+        bool verificaAresta(id, target_id);
 
-        void fechoTransitivoDireto(ofstream &output_file, int id);
+        int contaRotulo(int rotuloAnalisado,Graph *grafoOriginal);
+       
         void fechoTransitivoIndireto(ofstream &output_file, int id);
 
         bool deepthFirstSearch1(int id, int start);
@@ -62,8 +61,6 @@ class Graph{
         void auxDeepthFirstSearch(bool verify[], Graph *novoGrafo, Node *v);
 
         Graph* caminhamentoDeProfundidade(int x);
-        int * topologicalSorting();
-        bool graphtemCiclo();
         Graph *getVertexInduced(int *listIdNodes, int tam);
         
         Graph *agmKuskal(ofstream &output_file);
@@ -72,10 +69,6 @@ class Graph{
         bool verificaSubarvore(int v1, int v2, Graph *subGrafo);
 
         Graph *agmPrim(ofstream &output_file);
-
-        void floydMarshall(ofstream &output_file, int idSource, int idTarget);
-        int**constroiFloyd(int tamanho, int **distancia);
-        void dijkstra(ofstream &output_file,int idSource, int idTarget);
         void printGraph(ofstream &output_file);
         
         //methods phase1

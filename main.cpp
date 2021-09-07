@@ -16,7 +16,7 @@
 
 using namespace std;
 
-Graph *leitura(ifstream &input_file, int directed, int weightedEdge, int weightedNode)
+/*Graph *leitura(ifstream &input_file, int directed, int weightedEdge, int weightedNode)
 {
 
     //Variáveis para auxiliar na criação dos nós no Grafo
@@ -80,29 +80,61 @@ Graph *leitura(ifstream &input_file, int directed, int weightedEdge, int weighte
     }
 
     return graph;
-}
+}*/
 
-Graph *leituraInstancia(ifstream &input_file, int directed, int weightedEdge, int weightedNode)
+Graph *leituraInstancia(ifstream &input_file)
 {
 
     //Variáveis para auxiliar na criação dos nós no Grafo
-    int idNodeSource;
-    int idNodeTarget;
+
     int order;
-    int numEdges;
+    int numeroRotulos;
 
     //Pegando a ordem do grafo
-    input_file >> order;
+    input_file >> order >> numeroRotulos;
+    int matrixCorAresta[order][order];
 
-    //Criando objeto grafo
-    Graph *graph = new Graph(order, directed, weightedEdge, weightedNode);
-
-    //Leitura de arquivo
-    while (input_file >> idNodeSource >> idNodeTarget)
+    for (int k = 0; k < order; k++)
     {
-
-        graph->insertEdge(idNodeSource, idNodeTarget, 1);
+        for (int j = 0; j < order; j++)
+        {
+            matrixCorAresta[k][j]= -1;
+        }
+        
     }
+    //Criando objeto grafo
+    Graph *graph = new Graph(order, numeroRotulos);
+    int coluna = 1;
+    int linha = 0;
+    //Leitura de arquivo
+    while (input_file >> numeroRotulos)
+    {
+        if (coluna < order)
+        {
+            
+            matrixCorAresta[coluna][linha] = numeroRotulos;
+            coluna++;
+        }
+        else if( linha < order-1)
+        {
+            linha++;
+            coluna = linha + 1;
+        }else{
+            break;
+        }
+    }
+
+    for (int o = 0; o < order; o++)
+    {
+        for (int p = 0; p < order; p++)
+        {
+            if(matrixCorAresta[o][p] != -1 && matrixCorAresta[o][p]!= numeroRotulos){
+                graph->insertEdge(o,p,matrixCorAresta[o][p]);
+            }
+        }
+        
+    }
+    
 
     return graph;
 }

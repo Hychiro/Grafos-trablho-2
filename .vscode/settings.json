@@ -33,6 +33,27 @@
         "type_traits": "cpp",
         "cstdint": "cpp",
         "functional": "cpp",
-        "utility": "cpp"
+        "utility": "cpp",
+        "complex": "cpp",
+        "condition_variable": "cpp",
+        "csetjmp": "cpp",
+        "csignal": "cpp",
+        "cstdatomic": "cpp",
+        "cstring": "cpp",
+        "bitset": "cpp",
+        "unordered_map": "cpp",
+        "unordered_set": "cpp",
+        "mutex": "cpp",
+        "numeric": "cpp",
+        "stdexcept": "cpp",
+        "system_error": "cpp",
+        "thread": "cpp",
+        "array": "cpp",
+        "cfenv": "cpp",
+        "cinttypes": "cpp",
+        "hashtable": "cpp",
+        "random": "cpp",
+        "regex": "cpp",
+        "valarray": "cpp"
     }
 }

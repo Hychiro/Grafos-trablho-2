@@ -12,7 +12,7 @@ Edge::Edge(int target_id){
 
     this->target_id = target_id;
     this->next_edge = NULL;
-    this->weight = 1;
+    this->rotulo = NULL;
 
 }
 
@@ -39,9 +39,9 @@ Edge* Edge::getNextEdge(){
 
 }
 
-float Edge::getWeight(){
+int Edge::getRotulo(){
 
-    return this->weight;
+    return this->rotulo;
 
 }
 
@@ -52,8 +52,8 @@ void Edge::setNextEdge(Edge* edge){
 
 }
 
-void Edge::setWeight(float weight){
+void Edge::setRotulo(int rotulo){
 
-    this->weight = weight;
+    this->rotulo = rotulo;
 
 }
