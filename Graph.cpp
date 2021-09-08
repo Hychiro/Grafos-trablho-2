@@ -34,6 +34,7 @@ Graph::Graph(int order, int numeroRotulos)
     this->last_node = NULL;
     this->number_edges = 0;
     this->numeroRotulos = numeroRotulos;
+    this->melhorInstancia=-1;
     insertAllNodes();
 }
 
@@ -409,6 +410,7 @@ Graph *Graph::gulosoRandomizado(float alfa, int instancia, int numIteracoes, Gra
         if ((q->getNumRotulos()) < (melhorSolucao->getNumRotulos()))
         {
             melhorSolucao = q;
+            melhorSolucao->melhorInstancia=instancia;
         }
 
         //chama o método recursivamente
@@ -498,6 +500,7 @@ Graph *Graph::gulosoRandomizadoReativo(int instancia, int numIteracoes, Graph *m
             if ((q->getNumRotulos()) < (melhorSolucao->getNumRotulos()))
             {
                 melhorSolucao = q;
+                melhorSolucao->melhorInstancia=instancia;
             }
             //chama o método recursivamente
           melhorSolucao = gulosoRandomizadoReativo(instancia + 1, numIteracoes, melhorSolucao, numAlfa, alfa, probAlfa, mediaAlfa, vezesUsada, output_file);
@@ -576,6 +579,7 @@ Graph *Graph::gulosoRandomizadoReativo(int instancia, int numIteracoes, Graph *m
             if ((q->getNumRotulos()) < (melhorSolucao->getNumRotulos()))
             {
                 melhorSolucao = q;
+                melhorSolucao->melhorInstancia=instancia;
             }
             //chama o método recursivamente
            melhorSolucao = gulosoRandomizadoReativo(instancia + 1, numIteracoes, melhorSolucao, numAlfa, alfa, probAlfa, mediaAlfa, vezesUsada, output_file);

@@ -32,6 +32,7 @@ private:
     int numeroRotulos;
 
 public:
+    int melhorInstancia;
     //Constructor
     Graph(int order, int numeroRotulos);
     //Destructor

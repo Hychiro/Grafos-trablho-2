@@ -96,6 +96,7 @@ int menu()
     cout << "[2] Algoritmo Guloso Randomizado" << endl;
     cout << "[3] Algoritmo Guloso Randomizado Reativo" << endl;
     cout << "[4] Printando o Grafo " << endl;
+    cout << "[5] Densidade de Arestas do Grafo "<<endl;
     cout << "[0] Sair" << endl;
 
     cin >> selecao;
@@ -134,6 +135,7 @@ void selecionar(int selecao, Graph *graph, ofstream &output_file)
         srand((unsigned)time(NULL));
         Graph *novoGrafo = graph->gulosoRandomizado(alfa, 0, numdInteracoes, graph, output_file);
         output_file << "Quantidade minima de rotulos usando alfa(" << alfa << "): " << novoGrafo->getNumRotulos() << endl;
+        output_file << "Iteracao do melhor Resultado: " << novoGrafo->melhorInstancia << endl;
         novoGrafo->printGraph(output_file);
         break;
     }
@@ -167,6 +169,7 @@ void selecionar(int selecao, Graph *graph, ofstream &output_file)
         
         
         output_file << "Quantidade minima de rotulos para o conjunto de alfas digitado: " << novoGrafo->getNumRotulos() << endl;
+        output_file << "A iteração do melhor resultado " << novoGrafo->melhorInstancia << endl;
         for (int j = 0; j < numAlfa; j++)
         {
             output_file << "O alfa " << alfa[j] << "teve: " << endl;
@@ -185,6 +188,11 @@ void selecionar(int selecao, Graph *graph, ofstream &output_file)
 
         graph->printGraph(output_file);
 
+        break;
+    }
+    case 5:
+    {
+        output_file << "Densidade de Arestas do Grafo: "<<graph->getNumberEdges()/graph->getOrder()<<endl<<endl;
         break;
     }
     default:
