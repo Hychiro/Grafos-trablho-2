@@ -277,16 +277,21 @@ Node *Graph::getNode(int id)
 
 Graph *Graph::guloso(ofstream &output_file)
 {
+   
     //// função pra ver se é conexo
     if (this->verificaConexo(this)) //verifica se o grafo gerADOR É CONEXO
     {
+
         //INICIO FUNÇÃO ORDENA CANDIDATOS
         std::list<int> arestasPorRotulo; //fila que aramzena os rotulos em ordem decrecente
         std::list<int>::iterator iterador;
+
         int vetorarestasPorRotulo[this->numeroRotulos]; //vetor que faz relação posição=Rotulo e valor da posição=numero de arestas;
         int vetorAux[this->numeroRotulos];
+
         for (int i = 0; i < this->numeroRotulos; i++)
-        {                                              //repetir para o numero de rotulos
+        {                                        
+             //repetir para o numero de rotulos
             vetorarestasPorRotulo[i] = contaRotulo(i); //para a posição i(que representa o Rótulo i) atribui o valor numero de arestas do Rotulo i
             vetorAux[i] = 0;
         }
@@ -315,10 +320,11 @@ Graph *Graph::guloso(ofstream &output_file)
             maiorRotulo.second = -1; //reinicia o Rotulo como -1
         }
         //FIM FUNÇÃO ORDENA CANDIDATOS
-
+        
         Graph *q = new Graph(this->order, 0); //-1 pois começamos a contar os rotulos do 0, então -1 significa que não a rotulos
         while (!q->verificaConexo(q))         //Enquanto o grafo solução não for conexo repita
         {
+            
             //Heuristica
             int rotuloAdicionado = arestasPorRotulo.front();
             q->adicionaRotulo(rotuloAdicionado, q, this); //chama a função q coloca o Rotulo no grafo e adiciona as arestas desse Rotulo
@@ -677,7 +683,7 @@ int Graph::contaRotulo(int rotuloAnalisado)
 {
 
     int numeroArestas = 0;
-
+    
     for (Node *it = this->getFirstNode(); it != NULL; it = it->getNextNode())
     {
 

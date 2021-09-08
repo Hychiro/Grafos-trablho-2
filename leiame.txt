@@ -1,0 +1,29 @@
+Para executar o programa é necessario que sejam escritos os argumentos na seguinte ordem:
+
+./<program_name> <input_file> <output_file>
+
+
+Nosso codigo faz a leitura do arquivo da seguinte maneira:
+
+O R
+A A A A...
+A A A...
+A A...
+A...
+...
+
+
+A letra "O" representa a ordem, a letra "R" o numero de rotulos, o "A" representa a aresta marcada por um dos rotulos
+
+Nosso codigo produz uma árvore de rotulação minima para cada uma das opções de menu. 
+Elas irão ser armazenadas em uma matriz que apartir dai gera o grafo principal, do qual derivam as execuções do menu.
+
+Nosso codigo executa as instancias ja proporcionadas pelo professor alem de executar uma outra adicional chamada 
+entradaTeste.txt que equivale ao exemplo do arquivo 888.pdf, pagina 26.
+
+Detalhes:
+
+O algaritmo guloso simples, funciona normalmente e não quebra a execução;
+O algaritmo guloso randomico funciona com no maximo 1000 interações, sem quebrar a execução;
+O algaritmo guloso randomico reativo funciona com no maximo 47 interações, sem quebrar a execução;
+

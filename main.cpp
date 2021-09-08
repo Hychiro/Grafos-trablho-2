@@ -27,9 +27,10 @@ Graph *leituraInstancia(ifstream &input_file, ofstream &output_file)
 
     int order;
     int numeroRotulos;
+    int numeroRotulosTotais;
 
     //Pegando a ordem do grafo
-    input_file >> order >> numeroRotulos;
+    input_file >> order >> numeroRotulosTotais;
     int matrixCorAresta[order][order];
 
     for (int k = 0; k < order; k++)
@@ -40,7 +41,7 @@ Graph *leituraInstancia(ifstream &input_file, ofstream &output_file)
         }
     }
     //Criando objeto grafo
-    Graph *graph = new Graph(order, numeroRotulos);
+    Graph *graph = new Graph(order, numeroRotulosTotais);
     int coluna = 1;
     int linha = 0;
     //Leitura de arquivo
@@ -50,7 +51,7 @@ Graph *leituraInstancia(ifstream &input_file, ofstream &output_file)
         if (coluna < order)
         {
 
-            matrixCorAresta[coluna][linha] = numeroRotulos;
+            matrixCorAresta[linha][coluna] = numeroRotulos;
 
             coluna++;
         }
@@ -59,7 +60,7 @@ Graph *leituraInstancia(ifstream &input_file, ofstream &output_file)
             linha++;
 
             coluna = linha + 1;
-            matrixCorAresta[coluna][linha] = numeroRotulos;
+            matrixCorAresta[linha][coluna] = numeroRotulos;
             coluna++;
         }
         else
@@ -72,12 +73,14 @@ Graph *leituraInstancia(ifstream &input_file, ofstream &output_file)
     {
         for (int p = 0; p < order; p++)
         {
-            if (matrixCorAresta[o][p] != -1 && matrixCorAresta[o][p] != numeroRotulos)
+            
+            if (matrixCorAresta[o][p] != -1 && matrixCorAresta[o][p] < numeroRotulosTotais)
             {
                 graph->insertEdge(o, p, matrixCorAresta[o][p]);
-                
+               
             }
         }
+        output_file<<endl;
     }
 
     return graph;
@@ -110,16 +113,17 @@ void selecionar(int selecao, Graph *graph, ofstream &output_file)
     case 1:
     {
 
-        output_file << "Algoritmo Guloso"<< endl;
+        output_file << "Algoritmo Guloso" << endl;
 
         Graph *novoGrafo = graph->guloso(output_file);
+        output_file << "Quantidade minima de rotulos: " << novoGrafo->getNumRotulos() << endl;
         novoGrafo->printGraph(output_file);
         break;
     }
     //Algoritmo Guloso Randomizado;
     case 2:
     {
-        output_file << "Algoritmo Guloso Radomizado"<< endl;
+        output_file << "Algoritmo Guloso Radomizado" << endl;
 
         float alfa;
         cout << "Digite o alfa:" << endl;
@@ -130,6 +134,7 @@ void selecionar(int selecao, Graph *graph, ofstream &output_file)
         cin >> numdInteracoes;
         srand((unsigned)time(NULL));
         Graph *novoGrafo = graph->gulosoRandomizado(alfa, 0, numdInteracoes, graph, output_file);
+        output_file << "Quantidade minima de rotulos usando alfa(" << alfa << "): " << novoGrafo->getNumRotulos() << endl;
         novoGrafo->printGraph(output_file);
         break;
     }
@@ -159,7 +164,16 @@ void selecionar(int selecao, Graph *graph, ofstream &output_file)
         cout << "Digite o numero de Iteracoes:" << endl;
         cin >> numdInteracoes;
         srand((unsigned)time(NULL));
-        Graph *novoGrafo = graph->gulosoRandomizadoReativo(0, numdInteracoes, graph, numAlfa, alfa,probAlfa, mediaAlfa,vezesUsada, output_file);
+        Graph *novoGrafo = graph->gulosoRandomizadoReativo(0, numdInteracoes, graph, numAlfa, alfa, probAlfa, mediaAlfa, vezesUsada, output_file);
+        output_file << "Quantidade minima de rotulos para o conjunto de alfas digitado: " << novoGrafo->getNumRotulos() << endl;
+        for (int j = 0; j < numAlfa; j++)
+        {
+            output_file << "O alfa " << alfa[j] << "teve: " << endl;
+            output_file << "Probabilidade final de " << probAlfa[j] << endl;
+            output_file << "Media final de " << mediaAlfa[j] << endl;
+            output_file << "Numero de particopações total igual a " << vezesUsada[j] << endl;
+            output_file << endl;
+        }
         novoGrafo->printGraph(output_file);
         break;
     }
@@ -233,7 +247,7 @@ int main(int argc, char const *argv[])
     if (input_file.is_open())
     {
 
-        graph = leituraInstancia(input_file,output_file);
+        graph = leituraInstancia(input_file, output_file);
     }
     else
         cout << "Unable to open " << argv[1];
