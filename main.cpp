@@ -80,7 +80,6 @@ Graph *leituraInstancia(ifstream &input_file, ofstream &output_file)
                
             }
         }
-        output_file<<endl;
     }
 
     return graph;

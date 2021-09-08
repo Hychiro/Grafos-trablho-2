@@ -572,7 +572,7 @@ Graph *Graph::gulosoRandomizadoReativo(int instancia, int numIteracoes, Graph *m
             //saiu do while e a solução já foi encontrada
             mediaAlfa[alfaEscolhido] = (mediaAlfa[alfaEscolhido] * (vezesUsada[alfaEscolhido] - 1) + q->getNumRotulos()) / vezesUsada[alfaEscolhido];
             //compara a solução atual com a melhor solução
-            output_file<<"instancia "<<instancia<<" q->getNumRotulos() vs melhorSolucao->getNumRotulos(): "<<q->getNumRotulos()<<" vs "<<melhorSolucao->getNumRotulos()<<endl;
+            
             if ((q->getNumRotulos()) < (melhorSolucao->getNumRotulos()))
             {
                 melhorSolucao = q;
@@ -583,10 +583,10 @@ Graph *Graph::gulosoRandomizadoReativo(int instancia, int numIteracoes, Graph *m
     }
     else
     {
-        output_file<<"else melhorSolucao->getNumRotulos(); "<<melhorSolucao->getNumRotulos()<< endl;
+        
         return melhorSolucao;
     }
-    output_file<<"fora do else melhorSolucao->getNumRotulos(); "<<melhorSolucao->getNumRotulos()<< endl;
+    
     return melhorSolucao;
 }
 
