@@ -816,15 +816,12 @@ Graph *Graph::getVertexInduced(int *listIdNodes, int tam)
 
 Graph *Graph::agmPrim(ofstream &output_file)
 {
-    int tamanho, x;
-    cout << "Digite o numero de vértices de 1 a " << this->order << " que serão adicionados no subgrafo vértice induzido" << endl;
-    cin >> tamanho;
+    int tamanho;
+    tamanho=this->order;
     int *listaNos = new int[tamanho];
     for (int i = 0; i < tamanho; i++)
     {
-        cout << "Digite o vértice numero " << i + 1 << ": " << endl;
-        cin >> x;
-        listaNos[i] = x;
+        listaNos[i] = i;
     }
 
     Graph *grafoVI;
@@ -843,11 +840,11 @@ Graph *Graph::agmPrim(ofstream &output_file)
     {
         adicionados[i] = false;
     }
-    adicionados[x] = true;
+    adicionados[0] = true;
 
     std::list<int> vertices; //marca quais vértices ja possuem um caminho
     std::list<int>::iterator k;
-    vertices.push_front(x); //adiciona o primeiro vértice na lista
+    vertices.push_front(0); //adiciona o primeiro vértice na lista
 
     bool todosVerticesAdicionados = false;
 
@@ -867,7 +864,7 @@ Graph *Graph::agmPrim(ofstream &output_file)
                 int verticeAdjacente = it->getTargetId(); //pega o vértice alvo dessa aresta
                 int custo_aresta = 1;       //pega o custo dessa aresta
 
-                if (adicionados[verticeAdjacente - 1] == false) //se o vértice alvo não foi adicionado
+                if (adicionados[verticeAdjacente] == false) //se o vértice alvo não foi adicionado
                 {
                     if (menorCusto > custo_aresta) //se o custo dessa aresta for menor de todas que ja forram analisados
                     {
@@ -885,7 +882,7 @@ Graph *Graph::agmPrim(ofstream &output_file)
         custoTotal=custoTotal+menorCusto;
 
         vertices.push_front(vertice2);    //adiciona o vertice 2 na lista vertices
-        adicionados[vertice2 - 1] = true; //marcar o vertice 2 como adicionado
+        adicionados[vertice2] = true; //marcar o vertice 2 como adicionado
         int contador = 0;
         for (int i = 0; i < (this->order); i++) //verificar se todos vértices ja foram adicionados se sim todosVerticesAdicionados=true
         {

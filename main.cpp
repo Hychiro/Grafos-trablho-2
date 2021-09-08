@@ -117,7 +117,8 @@ void selecionar(int selecao, Graph *graph, ofstream &output_file)
 
         Graph *novoGrafo = graph->guloso(output_file);
         output_file << "Quantidade minima de rotulos: " << novoGrafo->getNumRotulos() << endl;
-        novoGrafo->printGraph(output_file);
+        Graph *ag = novoGrafo->agmPrim(output_file);
+        ag->printGraph(output_file);
         break;
     }
     //Algoritmo Guloso Randomizado;
@@ -136,7 +137,8 @@ void selecionar(int selecao, Graph *graph, ofstream &output_file)
         Graph *novoGrafo = graph->gulosoRandomizado(alfa, 0, numdInteracoes, graph, output_file);
         output_file << "Quantidade minima de rotulos usando alfa(" << alfa << "): " << novoGrafo->getNumRotulos() << endl;
         output_file << "Iteracao do melhor Resultado: " << novoGrafo->melhorInstancia << endl;
-        novoGrafo->printGraph(output_file);
+        Graph *ag = novoGrafo->agmPrim(output_file);
+        ag->printGraph(output_file);
         break;
     }
     //Algoritmo Guloso Radomizado Reativo
@@ -178,11 +180,11 @@ void selecionar(int selecao, Graph *graph, ofstream &output_file)
             output_file << "Numero de particopações total igual a " << vezesUsada[j] << endl;
             output_file << endl;
         }
-        novoGrafo->printGraph(output_file);
+        Graph *ag = novoGrafo->agmPrim(output_file);
+        ag->printGraph(output_file);
         break;
     }
 
-    //AGM - Kruscal;
     case 4:
     {
 
