@@ -165,6 +165,8 @@ void selecionar(int selecao, Graph *graph, ofstream &output_file)
         cin >> numdInteracoes;
         srand((unsigned)time(NULL));
         Graph *novoGrafo = graph->gulosoRandomizadoReativo(0, numdInteracoes, graph, numAlfa, alfa, probAlfa, mediaAlfa, vezesUsada, output_file);
+        
+        
         output_file << "Quantidade minima de rotulos para o conjunto de alfas digitado: " << novoGrafo->getNumRotulos() << endl;
         for (int j = 0; j < numAlfa; j++)
         {
