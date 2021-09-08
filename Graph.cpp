@@ -763,82 +763,143 @@ int Graph::funcEscolheAlfa(int numAlfa, float *alfa, float *probAlfa, ofstream &
 ///////////////////////////////////////////////////////FECHO TRANSITIVO E BUSCAS///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-void Graph::fechoTransitivoDireto(ofstream &output_file, int id)
-{
 
-    //com o id do vértice acha o vertice que deve ser analisado
-    int idParametro = id - 1;
-    //cria um vetor que marca quais vértices ja foram analisados
-    bool visitados[this->order];
-    //cria o vetor fecho transitivo direto
-    bool FTD[this->order];
-    //cria uma fila que diz quais vertices ainda precisam ser analisados
-    list<int> fila;
-    //adiciona o vertice inicial nele
-    fila.push_front(id);
 
-    for (int i = 0; i < this->order; i++)
-    {
-        visitados[i] = false;
-        FTD[i] = false;
-    }
-
-    //começa iteração (enquanto a fila não estiver vazia repita)
-    while (!(fila.empty()))
-    {
-        //pega um vértice a ser analisado da fila
-        int aux = fila.front();
-        int IdAnalisado = aux - 1;
-        Node *V;
-        V = getNode(fila.front());
-        //exclui ele da fila
-        fila.pop_front();
-        //verifica se o vértice a ser analisado ja foi analisado. (se ele ja foi acaba essa iteração)
-        if (visitados[IdAnalisado] == false)
-        {
-            //marca o vértice como visitado;
-            visitados[IdAnalisado] = true;
-            //adiciona ele no vetor fecho transitivo direto
-            FTD[IdAnalisado] = true;
-            //adiciona todos os vértices adjacentes a ele na fila
-            for (Edge *it = V->getFirstEdge(); it != NULL; it = it->getNextEdge())
-            {
-                int verticeAdjacente = it->getTargetId();
-                fila.push_front(verticeAdjacente);
-            }
-        }
-    }
-
-    //imprimir o FTD
-    output_file << "O conjunto FTD do vértice " << id << " é: {";
-    int contador = 0;
-    for (int i = 0; i < this->order; i++)
-    {
-        if (FTD[i] == true)
-        {
-            contador++;
-        }
-    }
-    for (int i = 0; i < this->order; i++)
-    {
-        if (FTD[i] == true)
-        {
-            if (contador - 1 > 0)
-            {
-                output_file << i + 1 << ", ";
-                contador--;
-            }
-            else if (contador - 1 == 0)
-            {
-                output_file << i + 1;
-            }
-        }
-    }
-    output_file << "}" << endl;
-}
 
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 ///////////////////////////////////////////////////////CAMINHAMENTO,ALGORITMOS E ORDENACAO TOPOLOGICA///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+Graph *Graph::getVertexInduced(int *listIdNodes, int tam)
+{
+    Graph *subGrafo = new Graph(this->getOrder(), this->getNumRotulos());
+    //para todo noh da lista faça
+
+    for (int i = 0; i < tam; i++)
+    {
+
+        //incluir noh no subgrafo
+        if (this->searchNode(listIdNodes[i]))
+        {
+            subGrafo->insertNode(listIdNodes[i]);
+        }
+    }
+    Node *p;
+    Node *orig;
+    Edge *aux;
+    bool verificaSeTem = false;
+    //para todo noh do subgrafo,
+    for (p = subGrafo->getFirstNode(); p != NULL; p = p->getNextNode())
+    {
+        orig = getNode(p->getId());
+
+        //verificar as arestas no grafo original.
+        for (aux = orig->getFirstEdge(); aux != NULL; aux = aux->getNextEdge())
+        {
+
+            // se a aresta do vertice pra onde ela aponta existir
+
+            verificaSeTem = subGrafo->searchNode(aux->getTargetId());
+            if (verificaSeTem)
+            {
+                // incluir a aresta no noh do subgrafo;
+                subGrafo->insertEdge(p->getId(), aux->getTargetId(), 1);
+            }
+        }
+    }
+    // retorna subgrafo
+    return subGrafo;
+}
+
+
+Graph *Graph::agmPrim(ofstream &output_file)
+{
+    int tamanho, x;
+    cout << "Digite o numero de vértices de 1 a " << this->order << " que serão adicionados no subgrafo vértice induzido" << endl;
+    cin >> tamanho;
+    int *listaNos = new int[tamanho];
+    for (int i = 0; i < tamanho; i++)
+    {
+        cout << "Digite o vértice numero " << i + 1 << ": " << endl;
+        cin >> x;
+        listaNos[i] = x;
+    }
+
+    Graph *grafoVI;
+    grafoVI = this->getVertexInduced(listaNos, tamanho);
+
+    Graph *grafoX = new Graph(this->getOrder(), this->getNumRotulos());
+    Node *p;
+    //para todo noh da lista faça
+    for (p = grafoVI->getFirstNode(); p != NULL; p = p->getNextNode())
+    {
+        grafoX->insertNode(p->getId());
+    }
+
+    bool adicionados[this->order]; //marca quais vértices ja possuem um caminho
+    for (int i = 0; i < this->order; i++)
+    {
+        adicionados[i] = false;
+    }
+    adicionados[x] = true;
+
+    std::list<int> vertices; //marca quais vértices ja possuem um caminho
+    std::list<int>::iterator k;
+    vertices.push_front(x); //adiciona o primeiro vértice na lista
+
+    bool todosVerticesAdicionados = false;
+
+    int custoTotal=0;
+
+
+    while (todosVerticesAdicionados == false) //repetir até ter um caminho para todos os vértices
+    {
+        int vertice1; //nó que vai armazenar o vértice de onde vai sair a aresta
+        int vertice2; //nó que vai armazenar o vértice que a aresta vai chegar
+        int menorCusto = 999999999;
+        for (k = vertices.begin(); k != vertices.end(); k++) //percorre todos vértices da lista
+        {
+            Node *verticeAnalisado = grafoVI->getNode(*k);
+            for (Edge *it = verticeAnalisado->getFirstEdge(); it != NULL; it = it->getNextEdge()) //percorre todas arestas de grafoVI
+            {
+                int verticeAdjacente = it->getTargetId(); //pega o vértice alvo dessa aresta
+                int custo_aresta = 1;       //pega o custo dessa aresta
+
+                if (adicionados[verticeAdjacente - 1] == false) //se o vértice alvo não foi adicionado
+                {
+                    if (menorCusto > custo_aresta) //se o custo dessa aresta for menor de todas que ja forram analisados
+                    {
+                        vertice1 = verticeAnalisado->getId();                   //lembra do nó que esta saindo essa aresta
+                        vertice2 = verticeAdjacente; //lembra do nó onde esta chegando essa arresta
+                        menorCusto = custo_aresta;                     //lembra do custo dessa aresta
+                    }
+                }
+            }
+        }
+
+        //adiciona uma aresta entre o vértice 1 e 2 que possui custo = menorCusto
+        grafoX->insertEdge(vertice1, vertice2, menorCusto);
+
+        custoTotal=custoTotal+menorCusto;
+
+        vertices.push_front(vertice2);    //adiciona o vertice 2 na lista vertices
+        adicionados[vertice2 - 1] = true; //marcar o vertice 2 como adicionado
+        int contador = 0;
+        for (int i = 0; i < (this->order); i++) //verificar se todos vértices ja foram adicionados se sim todosVerticesAdicionados=true
+        {
+            if (adicionados[i] == true)
+            {
+                contador++;
+            }
+        }
+        if (contador == (grafoX->order))
+        {
+            todosVerticesAdicionados = true;
+        }
+    }
+    delete[] listaNos;
+
+    return grafoX;
+}
