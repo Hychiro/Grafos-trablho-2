@@ -192,7 +192,10 @@ void selecionar(int selecao, Graph *graph, ofstream &output_file)
     }
     case 5:
     {
-        output_file << "Densidade de Arestas do Grafo: "<<graph->getNumberEdges()/graph->getOrder()<<endl<<endl;
+        float arestas =(float) graph->getNumberEdges();
+        float vertices =(float) graph->getOrder();
+        float densidade = arestas / ((vertices*(vertices-1))/2);
+        output_file << "Densidade de Arestas do Grafo: "<<densidade<<endl;
         break;
     }
     default:
