@@ -1,3 +1,3 @@
-Densidade de Arestas do Grafo: 0.099798
+Densidade de Arestas do Grafo: 0.0998995
 
 
