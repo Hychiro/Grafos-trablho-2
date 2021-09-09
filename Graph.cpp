@@ -385,7 +385,6 @@ Graph *Graph::gulosoRandomizado(float alfa, int instancia, int numIteracoes, Gra
 
             int numeroCadidatosPlausiveis = ceil(arestasPorRotulo.size() * alfa); //usa o alfa para saber quantas posições da fila temos que analisar
                                                                                   //sorteia um numero entre 0 e numeroCadidatosPlausiveis
-            srand((unsigned)time(NULL));
             int k = (rand() % numeroCadidatosPlausiveis);
 
             int contador = 0;
