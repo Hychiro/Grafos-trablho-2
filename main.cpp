@@ -118,6 +118,7 @@ void selecionar(int selecao, Graph *graph, ofstream &output_file)
         Graph *novoGrafo = graph->guloso(output_file);
         output_file << "Quantidade minima de rotulos: " << novoGrafo->getNumRotulos() << endl;
         Graph *ag = novoGrafo->agmPrim(output_file);
+        output_file << "Quantidade minima de rotulos: " << ag->getNumRotulos() << endl;
         ag->printGraph(output_file);
         break;
     }

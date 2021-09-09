@@ -182,6 +182,7 @@ void Graph::insertEdge(int id, int target_id, int rotulo)
             if (!(found))
             {
                 this->rotulos.push_back(rotulo);
+                aumentaQtdRotulos();
             }
         }
     }
