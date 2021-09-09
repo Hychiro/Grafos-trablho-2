@@ -116,7 +116,7 @@ void selecionar(int selecao, Graph *graph, ofstream &output_file)
         output_file << "Algoritmo Guloso" << endl;
 
         Graph *novoGrafo = graph->guloso(output_file);
-        output_file << "Quantidade minima de rotulos: " << novoGrafo->getNumRotulos() << endl;
+       
         Graph *ag = novoGrafo->agmPrim(output_file);
         output_file << "Quantidade minima de rotulos: " << ag->getNumRotulos() << endl;
         ag->printGraph(output_file);
@@ -136,9 +136,9 @@ void selecionar(int selecao, Graph *graph, ofstream &output_file)
         cin >> numdInteracoes;
         srand((unsigned)time(NULL));
         Graph *novoGrafo = graph->gulosoRandomizado(alfa, 0, numdInteracoes, graph, output_file);
-        output_file << "Quantidade minima de rotulos usando alfa(" << alfa << "): " << novoGrafo->getNumRotulos() << endl;
         output_file << "Iteracao do melhor Resultado: " << novoGrafo->melhorInstancia << endl;
         Graph *ag = novoGrafo->agmPrim(output_file);
+        output_file << "Quantidade minima de rotulos usando alfa(" << alfa << "): " << ag->getNumRotulos() << endl;
         ag->printGraph(output_file);
         break;
     }
@@ -171,7 +171,7 @@ void selecionar(int selecao, Graph *graph, ofstream &output_file)
         Graph *novoGrafo = graph->gulosoRandomizadoReativo(0, numdInteracoes, graph, numAlfa, alfa, probAlfa, mediaAlfa, vezesUsada, output_file);
         
         
-        output_file << "Quantidade minima de rotulos para o conjunto de alfas digitado: " << novoGrafo->getNumRotulos() << endl;
+        
         output_file << "A iteração do melhor resultado " << novoGrafo->melhorInstancia << endl;
         for (int j = 0; j < numAlfa; j++)
         {
@@ -182,6 +182,7 @@ void selecionar(int selecao, Graph *graph, ofstream &output_file)
             output_file << endl;
         }
         Graph *ag = novoGrafo->agmPrim(output_file);
+        output_file << "Quantidade minima de rotulos para o conjunto de alfas digitado: " << ag->getNumRotulos() << endl;
         ag->printGraph(output_file);
         break;
     }

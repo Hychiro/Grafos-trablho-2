@@ -1,7 +1,11 @@
-Para executar o programa é necessario que sejam escritos os argumentos na seguinte ordem:
+Para compilar o programa é necessario que os dados abaixo sejam escritos os argumentos na seguinte ordem:
+g++ -std=c++0x .\main.cpp -o .\main.exe 
+
+Para executar o programa é necessario que os dados sejam escritos os argumentos na seguinte ordem:
 
 ./<program_name> <input_file> <output_file>
-
+<input_file> representa o arquivo de entrada
+<output_file> representa o arquivo de saida(se não existir, ele será criado para a execução)
 
 Nosso codigo faz a leitura do arquivo da seguinte maneira:
 
@@ -13,17 +17,46 @@ A...
 ...
 
 
-A letra "O" representa a ordem, a letra "R" o numero de rotulos, o "A" representa a aresta marcada por um dos rotulos
+A letra "O" representa a ordem, a letra "R" o numero de rotulos, o "A" representa o rotulo da aresta coluna linha
 
-Nosso codigo produz uma árvore de rotulação minima para cada uma das opções de menu. 
-Elas irão ser armazenadas em uma matriz que apartir dai gera o grafo principal, do qual derivam as execuções do menu.
+isso produz uma matriz triangular superior de 0 a O-1. tendo sua diagonal principal valendo -1.
+Depois adiciona essas arestas rotuladas de acordo com a regra pedida, criando um grafo.
 
-Nosso codigo executa as instancias ja proporcionadas pelo professor alem de executar uma outra adicional chamada 
+O menu dara 6 opções
+1 - O algaritmo guloso simples;
+	Retorna no arquivo de saida uma árvore geradora de rotulação minima.
+
+2 - O algaritmo guloso randomico;
+	Pede pelo terminal o alpha
+	Pede pelo terminal o numero de iterações
+	Retorna no arquivo de saida Quantidade minima de rotulos usando alfa
+	Retorna no arquivo de saida Iteracao do melhor Resultado
+	Retorna no arquivo de saida uma árvore geradora de rotulação minima.
+
+3 - O algaritmo guloso randomico reativo;
+	Pede pelo terminal o numero de alphas
+	Pede pelo terminal para que se insira cada alpha
+	Pede pelo terminal o numero de iterações 
+	Retorna no arquivo de saida uma árvore geradora de rotulação minima.
+	
+
+4 - Printa Grafo o construido inicialmente;
+	Retorna no arquivo de saida um Grafo.
+
+5 - Densidade de Arestas do grafo inicial;
+	Retorna no arquivo de saida a densidade de arestas.
+
+0 - Encerra a execução;
+
+Nosso código produz uma árvore geradora de rotulação minima para cada uma das opções de menu. 
+
+Nosso código executa as instâncias já proporcionadas pelo professor, além de executar uma outra adicional chamada 
 entradaTeste.txt que equivale ao exemplo do arquivo 888.pdf, pagina 26.
+ou o exemplo do arquivo do site
 
 Detalhes:
-
-O algaritmo guloso simples, funciona normalmente e não quebra a execução;
-O algaritmo guloso randomico funciona com no maximo 1000 interações, sem quebrar a execução;
-O algaritmo guloso randomico reativo funciona com no maximo 47 interações, sem quebrar a execução;
+Considerando as instâncias abordadas nesse projeto e a máquina utilizada:
+O algaritmo guloso simples, funcionou normalmente e não quebrou em nenhuma execução;
+O algaritmo guloso randomico funcionou com no maximo 1000 interações, sem quebrar a execução;
+O algaritmo guloso randomico reativo funcionou com no maximo 60 interações, sem quebrar a execução;
 
