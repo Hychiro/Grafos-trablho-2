@@ -805,7 +805,7 @@ Graph *Graph::getVertexInduced(int *listIdNodes, int tam)
             if (verificaSeTem)
             {
                 // incluir a aresta no noh do subgrafo;
-                subGrafo->insertEdge(p->getId(), aux->getTargetId(), 1);
+                subGrafo->insertEdge(p->getId(), aux->getTargetId(), aux->getRotulo());
             }
         }
     }
@@ -823,75 +823,62 @@ Graph *Graph::agmPrim(ofstream &output_file)
     {
         listaNos[i] = i;
     }
-
     Graph *grafoVI;
     grafoVI = this->getVertexInduced(listaNos, tamanho);
-
-    Graph *grafoX = new Graph(this->getOrder(), this->getNumRotulos());
+    Graph *grafoX = new Graph(this->getOrder(), 0);
     Node *p;
     //para todo noh da lista faça
     for (p = grafoVI->getFirstNode(); p != NULL; p = p->getNextNode())
     {
         grafoX->insertNode(p->getId());
     }
-
     bool adicionados[this->order]; //marca quais vértices ja possuem um caminho
-    for (int i = 0; i < this->order; i++)
+    for (int j = 0; j < this->order; j++)
     {
-        adicionados[i] = false;
+        adicionados[j] = false;
     }
-    adicionados[0] = true;
-
+    adicionados[1] = true;
     std::list<int> vertices; //marca quais vértices ja possuem um caminho
     std::list<int>::iterator k;
-    vertices.push_front(0); //adiciona o primeiro vértice na lista
+    vertices.push_front(1); //adiciona o primeiro vértice na lista
 
     bool todosVerticesAdicionados = false;
-
-    int custoTotal=0;
-
 
     while (todosVerticesAdicionados == false) //repetir até ter um caminho para todos os vértices
     {
         int vertice1; //nó que vai armazenar o vértice de onde vai sair a aresta
         int vertice2; //nó que vai armazenar o vértice que a aresta vai chegar
-        int menorCusto = 999999999;
+        int rotulo;
         for (k = vertices.begin(); k != vertices.end(); k++) //percorre todos vértices da lista
         {
             Node *verticeAnalisado = grafoVI->getNode(*k);
             for (Edge *it = verticeAnalisado->getFirstEdge(); it != NULL; it = it->getNextEdge()) //percorre todas arestas de grafoVI
             {
                 int verticeAdjacente = it->getTargetId(); //pega o vértice alvo dessa aresta
-                int custo_aresta = 1;       //pega o custo dessa aresta
 
                 if (adicionados[verticeAdjacente] == false) //se o vértice alvo não foi adicionado
                 {
-                    if (menorCusto > custo_aresta) //se o custo dessa aresta for menor de todas que ja forram analisados
-                    {
-                        vertice1 = verticeAnalisado->getId();                   //lembra do nó que esta saindo essa aresta
-                        vertice2 = verticeAdjacente; //lembra do nó onde esta chegando essa arresta
-                        menorCusto = custo_aresta;                     //lembra do custo dessa aresta
-                    }
+                    rotulo = it->getRotulo();
+                    vertice1 = verticeAnalisado->getId();                   //lembra do nó que esta saindo essa aresta
+                    vertice2 = verticeAdjacente; //lembra do nó onde esta chegando essa arresta
                 }
             }
         }
-
         //adiciona uma aresta entre o vértice 1 e 2 que possui custo = menorCusto
-        grafoX->insertEdge(vertice1, vertice2, menorCusto);
+        grafoX->insertEdge(vertice1, vertice2, rotulo);
 
-        custoTotal=custoTotal+menorCusto;
 
         vertices.push_front(vertice2);    //adiciona o vertice 2 na lista vertices
         adicionados[vertice2] = true; //marcar o vertice 2 como adicionado
         int contador = 0;
-        for (int i = 0; i < (this->order); i++) //verificar se todos vértices ja foram adicionados se sim todosVerticesAdicionados=true
+        for (int i = 0; i < (getOrder()); i++) //verificar se todos vértices ja foram adicionados se sim todosVerticesAdicionados=true
         {
             if (adicionados[i] == true)
             {
                 contador++;
             }
         }
-        if (contador == (grafoX->order))
+        if (contador == (this->order))
         {
             todosVerticesAdicionados = true;
         }
