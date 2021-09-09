@@ -32,6 +32,7 @@ private:
     int numeroRotulos;
 
 public:
+    int melhorInstancia;
     //Constructor
     Graph(int order, int numeroRotulos);
     //Destructor
@@ -68,6 +69,9 @@ public:
     void fechoTransitivoDireto(ofstream &output_file, int id);
 
     void printGraph(ofstream &output_file);
+
+    Graph *getVertexInduced(int *listIdNodes, int tam);
+    Graph *agmPrim(ofstream &output_file);
 
     //methods phase1
     float greed();
