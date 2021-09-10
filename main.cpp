@@ -112,13 +112,17 @@ void selecionar(int selecao, Graph *graph, ofstream &output_file)
     //Algoritmo Guloso;
     case 1:
     {
-
+        int clo = clock();
+        
         output_file << "Algoritmo Guloso" << endl;
 
         Graph *novoGrafo = graph->guloso(output_file);
        
         Graph *ag = novoGrafo->agmPrim(output_file);
         output_file << "Quantidade minima de rotulos: " << ag->getNumRotulos() << endl;
+        
+
+        output_file<<"tempo de execucao: "<<(clock() - clo)<<" millisegundos"<<endl;
         ag->printGraph(output_file);
         break;
     }
@@ -147,53 +151,25 @@ void selecionar(int selecao, Graph *graph, ofstream &output_file)
         output_file << "Quantidade minima de rotulos usando alfa(" << alfa << "): " << ag->getNumRotulos() << endl;
         //Clock::time_point t1 = Clock::now();
         //milliseconds ms = std::chrono::duration_cast<milliseconds>(t1 - t0);
-
         output_file<<"tempo de execucao: "<<(clock() - clo)<<" millisegundos"<<endl;
         ag->printGraph(output_file);
-
+        
+        
         break;
     }
     //Algoritmo Guloso Radomizado Reativo
     case 3:
     {
-        output_file << "Algoritmo Guloso Radomizado Reativo" << endl;
-
-        int numAlfa; // encontra o num total de alfas
-        cout << "Digite o Numero de alfas a serem adicionados:" << endl;
-        cin >> numAlfa;
-        float *alfa = new float[numAlfa];     // guarda todos os alfas em um mesmo vetor
-        float *probAlfa = new float[numAlfa]; // guarda a probabilidade de todos os alfas, utilizar a posição do vetor alfa como referencia
-        int *mediaAlfa = new int[numAlfa];
-        int *vezesUsada = new int[numAlfa];
-        for (int i = 0; i < numAlfa; i++)
-        {
-            cout << "Digite o alfa " << i << ":" << endl;
-            cin >> alfa[i];
-
-            probAlfa[i] = 0;
-            mediaAlfa[i] = 0;
-            vezesUsada[i] = 0;
-        }
-
-        int numdInteracoes;
-        cout << "Digite o numero de Iteracoes:" << endl;
-        cin >> numdInteracoes;
-        srand((unsigned)time(NULL));
-        Graph *novoGrafo = graph->gulosoRandomizadoReativo(0, numdInteracoes, graph, numAlfa, alfa, probAlfa, mediaAlfa, vezesUsada, output_file);
         
+
+       
+    srand((unsigned)time(NULL));
+
         
+        Graph *novoGrafo = graph->gulosoRandomizadoReativoAux(0, output_file);
         
-        output_file << "A iteração do melhor resultado " << novoGrafo->melhorInstancia << endl;
-        for (int j = 0; j < numAlfa; j++)
-        {
-            output_file << "O alfa " << alfa[j] << "teve: " << endl;
-            output_file << "Probabilidade final de " << probAlfa[j] << endl;
-            output_file << "Media final de " << mediaAlfa[j] << endl;
-            output_file << "Numero de particopações total igual a " << vezesUsada[j] << endl;
-            output_file << endl;
-        }
         Graph *ag = novoGrafo->agmPrim(output_file);
-        output_file << "Quantidade minima de rotulos para o conjunto de alfas digitado: " << ag->getNumRotulos() << endl;
+        
         ag->printGraph(output_file);
         break;
     }

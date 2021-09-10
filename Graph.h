@@ -53,7 +53,7 @@ public:
     void insertAllNodes();
     bool verificaAresta(int id, int target_id);
 
-    void funcAtualizaProbAlfas(Graph *melhorSolucao, int numAlfa, float *alfa, float *probAlfa, int *mediaAlfa,ofstream &output_file);
+    void funcAtualizaProbAlfas(float numeroDeRotulos, int numAlfa, float *alfa, float *probAlfa, float *mediaAlfa,ofstream &output_file);
 
     int funcEscolheAlfa(int numAlfa, float *alfa, float *probAlfa,ofstream &output_file);
 
@@ -65,7 +65,7 @@ public:
     Graph *guloso(ofstream &output_file);
     Graph *gulosoRandomizadoAux(float alfa, int instancia, int numIteracoes, ofstream &output_file);
     Graph *gulosoRandomizado(float alfa, ofstream &output_file);
-    Graph *gulosoRandomizadoReativo(int instancia, int numIteracoes, Graph *melhorSolucao, int numAlfa, float *alfa, float *probAlfa, int *mediaAlfa, int *vezesUsadaofstream, ofstream &output_file);
+    Graph *gulosoRandomizadoReativoAux(int instancia, ofstream &output_file);
 
     void fechoTransitivoDireto(ofstream &output_file, int id);
 
