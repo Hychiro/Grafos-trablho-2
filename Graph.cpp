@@ -131,6 +131,7 @@ void Graph::insertNode(int id)
     this->last_node = p;
     this->last_node->setNextNode(NULL);
     this->order++;
+    delete p;
 }
 void Graph::insertAllNodes()
 {
@@ -341,11 +342,34 @@ Graph *Graph::guloso(ofstream &output_file)
     }
 }
 
-Graph *Graph::gulosoRandomizado(float alfa, int instancia, int numIteracoes, Graph *melhorSolucao, ofstream &output_file)
+Graph *Graph::gulosoRandomizadoAux(float alfa, int instancia, int numIteracoes, ofstream &output_file)
+{
+    Graph *melhorSolucao = this;
+
+while (instancia < numIteracoes)
+    {
+        Graph *itAtual = this;
+
+        cout<<instancia<<endl;
+
+        Graph *aux=itAtual->gulosoRandomizado(alfa, output_file);
+
+        if (melhorSolucao->getNumRotulos() > aux->getNumRotulos())
+        {
+        melhorSolucao=aux;
+        melhorSolucao->melhorInstancia=instancia;
+        }
+
+        instancia++;
+    }
+
+    return melhorSolucao;
+}
+
+
+Graph *Graph::gulosoRandomizado(float alfa, ofstream &output_file)
 { //deve ser iniciado com Instancia 0 e Grafo melhorSolução==GrafoGerador
 
-    if (instancia < numIteracoes)
-    {
         //INICIO FUNÇÃO ORDENA CANDIDATOS
         std::list<int> arestasPorRotulo; //fila que aramzena os rotulos em ordem decrecente
         std::list<int>::iterator iterador;
@@ -403,25 +427,10 @@ Graph *Graph::gulosoRandomizado(float alfa, int instancia, int numIteracoes, Gra
                 contador++;
             }
         }
-
-        //saiu do while e a solução já foi encontrada
-        //compara a solução atual com a melhor solução
-
-        if ((q->getNumRotulos()) < (melhorSolucao->getNumRotulos()))
-        {
-            melhorSolucao = q;
-            melhorSolucao->melhorInstancia=instancia;
-        }
-
         //chama o método recursivamente
-        melhorSolucao = gulosoRandomizado(alfa, instancia + 1, numIteracoes, melhorSolucao, output_file);
-    }
-    else
-    {
-        Graph *aux = melhorSolucao;
-        return aux;
-    }
-    return melhorSolucao;
+        //delete q;
+        //arestasPorRotulo.~list();
+    return q;
 }
 
 Graph *Graph::gulosoRandomizadoReativo(int instancia, int numIteracoes, Graph *melhorSolucao, int numAlfa, float *alfa, float *probAlfa, int *mediaAlfa, int *vezesUsada, ofstream &output_file)
@@ -606,7 +615,8 @@ void Graph::adicionaRotulo(int rotuloAnalisado, Graph *grafoNovo, Graph *grafoOr
     aux.push_back(rotuloAnalisado);
     grafoNovo->rotulos = aux;
     grafoNovo->aumentaQtdRotulos();
-
+    Node *it;
+    Edge *it2;
     //percorre todas as arestas
     for (Node *it = grafoOriginal->getFirstNode(); it != NULL; it = it->getNextNode())
     {
@@ -619,6 +629,7 @@ void Graph::adicionaRotulo(int rotuloAnalisado, Graph *grafoNovo, Graph *grafoOr
             }
         }
     }
+    aux.~list();
 }
 
 bool Graph::verificaConexo(Graph *grafo) // ta errado
@@ -652,6 +663,7 @@ bool Graph::verificaConexo(Graph *grafo) // ta errado
         //exclui ele da fila
         fila.pop_front();
         //verifica se o vértice a ser analisado ja foi analisado. (se ele ja foi acaba essa iteração)
+        Edge *it;
         if (visitados[IdAnalisado] == false)
         {
             //marca o vértice como visitado;
@@ -683,6 +695,7 @@ bool Graph::verificaConexo(Graph *grafo) // ta errado
             grafo->conexGraph = true;
         }
     }
+    fila.~list();
     return conexo;
 }
 
@@ -690,6 +703,8 @@ int Graph::contaRotulo(int rotuloAnalisado)
 {
 
     int numeroArestas = 0;
+    Node *it;
+    Edge *it2;
     
     for (Node *it = this->getFirstNode(); it != NULL; it = it->getNextNode())
     {
@@ -702,6 +717,7 @@ int Graph::contaRotulo(int rotuloAnalisado)
             }
         }
     }
+
     return numeroArestas / 2; // tem q voltar dividido por 2 pq todas arestas foram adicionados 2 vezes, logo serão somadas duas vezes
 }
 

@@ -63,7 +63,8 @@ public:
     bool verificaConexo(Graph *grafo);
 
     Graph *guloso(ofstream &output_file);
-    Graph *gulosoRandomizado(float alfa, int instancia, int numIteracoes, Graph *melhorSolucao, ofstream &output_file);
+    Graph *gulosoRandomizadoAux(float alfa, int instancia, int numIteracoes, ofstream &output_file);
+    Graph *gulosoRandomizado(float alfa, ofstream &output_file);
     Graph *gulosoRandomizadoReativo(int instancia, int numIteracoes, Graph *melhorSolucao, int numAlfa, float *alfa, float *probAlfa, int *mediaAlfa, int *vezesUsadaofstream, ofstream &output_file);
 
     void fechoTransitivoDireto(ofstream &output_file, int id);

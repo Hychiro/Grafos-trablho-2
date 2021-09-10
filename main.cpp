@@ -14,9 +14,9 @@ Matheus Cardoso Faesy 202065065A
 #include "Graph.h"
 #include "Node.h"
 #include "Edge.h"
-#include "Graph.cpp"
-#include "Node.cpp"
-#include "Edge.cpp"
+#include <chrono>
+#include <thread>
+#include <time.h>
 
 using namespace std;
 
@@ -135,11 +135,22 @@ void selecionar(int selecao, Graph *graph, ofstream &output_file)
         cout << "Digite o numero de Iteracoes:" << endl;
         cin >> numdInteracoes;
         srand((unsigned)time(NULL));
-        Graph *novoGrafo = graph->gulosoRandomizado(alfa, 0, numdInteracoes, graph, output_file);
+
+        //typedef std::chrono::high_resolution_clock Clock;
+        //typedef std::chrono::milliseconds milliseconds;
+        //Clock::time_point t0 = Clock::now();
+        int clo = clock();
+
+        Graph *novoGrafo = graph->gulosoRandomizadoAux(alfa, 0, numdInteracoes, output_file);
         output_file << "Iteracao do melhor Resultado: " << novoGrafo->melhorInstancia << endl;
         Graph *ag = novoGrafo->agmPrim(output_file);
         output_file << "Quantidade minima de rotulos usando alfa(" << alfa << "): " << ag->getNumRotulos() << endl;
+        //Clock::time_point t1 = Clock::now();
+        //milliseconds ms = std::chrono::duration_cast<milliseconds>(t1 - t0);
+
+        output_file<<"tempo de execucao: "<<(clock() - clo)<<" millisegundos"<<endl;
         ag->printGraph(output_file);
+
         break;
     }
     //Algoritmo Guloso Radomizado Reativo
