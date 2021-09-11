@@ -1,5 +1,5 @@
 Para compilar o programa é necessario que os dados abaixo sejam escritos os argumentos na seguinte ordem:
-g++ -std=c++0x .\main.cpp -o .\main.exe 
+g++ -std=c++0x *.c* -o .\main.exe 
 
 Para executar o programa é necessario que os dados sejam escritos os argumentos na seguinte ordem:
 
@@ -24,21 +24,25 @@ Depois adiciona essas arestas rotuladas de acordo com a regra pedida, criando um
 
 O menu dara 6 opções
 1 - O algaritmo guloso simples;
+	Retorna no arquivo de saida o tempo de execução
+	Retorna no arquivo de saida a quantidade minima de rotulos
 	Retorna no arquivo de saida uma árvore geradora de rotulação minima.
+	
 
 2 - O algaritmo guloso randomico;
 	Pede pelo terminal o alpha
 	Pede pelo terminal o numero de iterações
-	Retorna no arquivo de saida Quantidade minima de rotulos usando alfa
-	Retorna no arquivo de saida Iteracao do melhor Resultado
+	Retorna no arquivo de saida a quantidade minima de rotulos usando alfa
 	Retorna no arquivo de saida uma árvore geradora de rotulação minima.
+	Retorna no arquivo de saida o tempo de execução
 
 3 - O algaritmo guloso randomico reativo;
 	Pede pelo terminal o numero de alphas
 	Pede pelo terminal para que se insira cada alpha
 	Pede pelo terminal o numero de iterações 
-	Retorna no arquivo de saida uma árvore geradora de rotulação minima.
-	
+	Retorna no arquivo de saida o tempo de execução
+	Retorna no arquivo de saida a quantidade minima de rotulos para o conjunto de alfas digitado
+	Retorna no arquivo de saida uma árvore geradora de rotulação minima.	
 
 4 - Printa Grafo o construido inicialmente;
 	Retorna no arquivo de saida um Grafo.
@@ -48,15 +52,8 @@ O menu dara 6 opções
 
 0 - Encerra a execução;
 
-Nosso código produz uma árvore geradora de rotulação minima para cada uma das opções de menu. 
+
 
 Nosso código executa as instâncias já proporcionadas pelo professor, além de executar uma outra adicional chamada 
 entradaTeste.txt que equivale ao exemplo do arquivo 888.pdf, pagina 26.
 ou o exemplo do arquivo do site
-
-Detalhes:
-Considerando as instâncias abordadas nesse projeto e a máquina utilizada:
-O algaritmo guloso simples, funcionou normalmente e não quebrou em nenhuma execução;
-O algaritmo guloso randomico funcionou com no maximo 1000 interações, sem quebrar a execução;
-O algaritmo guloso randomico reativo funcionou com no maximo 60 interações, sem quebrar a execução;
-

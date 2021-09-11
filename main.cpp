@@ -169,6 +169,7 @@ void selecionar(int selecao, Graph *graph, ofstream &output_file)
         Graph *novoGrafo = graph->gulosoRandomizadoReativoAux(0, output_file);
         
         Graph *ag = novoGrafo->agmPrim(output_file);
+        output_file << "Quantidade minima de rotulos para o conjunto de alfas digitado: " << ag->getNumRotulos() << endl;
         
         ag->printGraph(output_file);
         break;

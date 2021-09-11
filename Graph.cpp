@@ -468,7 +468,7 @@ Graph *Graph::gulosoRandomizadoReativoAux(int instancia, ofstream &output_file)
         Graph *itAtual = this;
         if (instancia < numAlfa)
         {
-            cout << "instancia: " << instancia << endl;
+            
             Graph *aux = itAtual->gulosoRandomizado(alfa[instancia], output_file);
 
             vezesUsada[instancia] = vezesUsada[instancia] + 1;
@@ -493,7 +493,7 @@ Graph *Graph::gulosoRandomizadoReativoAux(int instancia, ofstream &output_file)
                 probAlfa[j] = qualidade[j] / somaDasQualidades;
             }
 
-            cout << "instancia: " << instancia << endl;
+            
             int alfaEscolhido = funcEscolheAlfa(numAlfa, alfa, probAlfa, output_file);
 
             Graph *aux = itAtual->gulosoRandomizado(alfa[alfaEscolhido], output_file);
@@ -508,18 +508,17 @@ Graph *Graph::gulosoRandomizadoReativoAux(int instancia, ofstream &output_file)
         }
         instancia++;
     }
-    for (int j = 0; j < numAlfa; j++)
+   /* for (int j = 0; j < numAlfa; j++)
         {
             output_file << "O alfa " << alfa[j] << " teve: " << endl;
             output_file << "Probabilidade final de " << probAlfa[j] << endl;
             output_file << "Media final de " << mediaAlfa[j] << endl;
             output_file << "Numero de particopações total igual a " << vezesUsada[j] << endl;
             output_file << endl;
-        }
-        output_file << "Quantidade minima de rotulos para o conjunto de alfas digitado: " << melhorSolucao->getNumRotulos() << endl;
+        }*/
+        
         output_file<<"tempo de execucao: "<<(clock() - clo)<<" millisegundos"<<endl;
-        output_file << "A iteração do melhor resultado " << melhorSolucao->melhorInstancia << endl;
-    cout << "saiu do while" << endl;
+   
     return melhorSolucao;
 }
 
