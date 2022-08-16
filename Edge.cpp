@@ -16,7 +16,6 @@ Edge::Edge(int target_id){
 
     this->target_id = target_id;
     this->next_edge = NULL;
-    this->rotulo = NULL;
 
 }
 
